@@ -266,10 +266,10 @@ export class RowValorMultiples {
 
 export class RowValor {
 
-  Taula: string = '';  // Nom de la taula
+  Taula = '';  // Nom de la taula
   Fields: CampValor[] = [];
   Multiples: RowValorMultiples[] = [];
-  tmp_action: string = '-';
+  tmp_action = '-';
 
   constructor(Taula) { this.Taula = Taula; }
 
@@ -306,9 +306,9 @@ export class TableRow {
     return Row;
   }
 
-  fromBDD(JSONString: string, existInBDD: boolean) {
+  /* J és una estructura que arriba de la bdd en format objectes */
+  fromBDD(J: any, existInBDD: boolean) {
 
-      let J = JSON.parse(JSONString);
       this.tmp_exist_in_bdd = existInBDD;
 
       this.Fields.forEach( F => {

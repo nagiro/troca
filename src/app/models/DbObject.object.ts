@@ -1,6 +1,5 @@
 import { GlobalVarsService } from '../helpers/global-vars.service';
 import { NotificationService } from '../helpers/notification.service';
-import { CompanyiesEspectaclesCercadorModel, CompanyiesEspectaclesCercadorFields, CompanyiesEspectaclesCercadorModelList, CompanyiesEspectaclesCercadorListData } from './companyies';
 import { HttpParams } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 
@@ -22,9 +21,9 @@ export class DbObject {
     return this.http.get<number>( this.base + '/getNew', { params: P }  );
   }
 
-  public getCompanyiesEspectaclesList(P: HttpParams): Observable<CompanyiesEspectaclesCercadorListData> {
+  public getCompanyiesEspectaclesList(P: HttpParams): Observable<any> {
     P = P.append('taula', 'companyiesespectaclesllistat');
-    return this.http.post<CompanyiesEspectaclesCercadorListData>( this.base + '/getDadesTaulaAll', P );
+    return this.http.post<any>( this.base + '/getDadesTaulaAll', P );
   }
 
   // Fem consulta i envio els paràmetres que és un observable combinat

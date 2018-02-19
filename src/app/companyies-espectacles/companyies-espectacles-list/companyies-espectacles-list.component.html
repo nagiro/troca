@@ -10,7 +10,7 @@
 		
 		  <table class="table">
 		  	<tr><td *ngFor="let Col of DisplayedColumns">{{Col}}</td></tr>
-		  	<tr *ngFor="let Row of CompanyiesEspectacles.List">
+		  	<tr *ngFor="let Row of CompanyiesEspectacles.Rows">
 		  		<td *ngFor="let Col of DisplayedColumns">{{Row.Fields[Col].Val}}</td>
 		  	</tr>
 		  </table>

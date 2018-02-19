@@ -1,3 +1,4 @@
+/*
 import { NumberType, TextType, TableModel, TableModelArray, DateType, BooleanType, HoraType } from '../helpers/type-helper.object';
 
 export class EspaisFields {
@@ -19,3 +20,4 @@ export class EspaisFields {
 
 export class EspaisModel extends TableModel<EspaisFields> {}
 export class EspaisList extends TableModelArray<EspaisModel, EspaisFields> {}
+*/

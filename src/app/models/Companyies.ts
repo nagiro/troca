@@ -16,10 +16,13 @@ export class CompanyiesRows extends TableRow {
   get I(nom: string) { return this.Fields.findIndex(X => { X.FieldName === nom }); }
 }
 
-export class CompanyiesEspectaclesCercadorRows extends CompanyiesFields {
+export class CompanyiesEspectaclesRows extends CompanyiesRows {
   
   constructor() {
     super();
     this.Fields.push( new TextType('ep_Nom', 'Nom espectacle' ) );
   }
 }
+
+
+export class CompanyiesEspectaclesListRows extends TableModelList {}

@@ -1,3 +1,4 @@
+/*
 import { NumberType, TextType, TableModel, TableModelArray, DateType, BooleanType, HoraType } from '../helpers/type-helper.object';
 
 export class ProjectesFields {
@@ -7,3 +8,4 @@ export class ProjectesFields {
 
 export class ProjectesModel extends TableModel<ProjectesFields> {}
 export class ProjectesList extends TableModelArray<ProjectesModel, ProjectesFields> {}
+*/

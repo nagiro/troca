@@ -1,3 +1,4 @@
+/*
 import { NumberType, TextType, TableModel, TableModelArray, DateType, BooleanType } from '../helpers/type-helper.object';
 
 export class ContractesControlFields {
@@ -12,3 +13,4 @@ export class ContractesControlFields {
 
 export class ContractesControlModel extends TableModel<ContractesControlFields> {}
 export class ContractesControlList extends TableModelArray<ContractesControlModel, ContractesControlFields> {}
+*/
