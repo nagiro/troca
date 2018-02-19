@@ -1,0 +1,28 @@
+<mat-card>
+	<mat-card-header>
+	
+		<mat-form-field *ngIf="!isText" class="col-12">
+			<mat-select placeholder="{{Titol}}" (selectionChange)="addSelect($event)" [ngModel]="T">
+				<mat-option *ngFor="let s of Extres" [value]="s">{{s.nom.Val}} </mat-option>
+			</mat-select>					
+			<span matSuffix *ngIf="hasObligatori"><mat-checkbox [ngModel] = "Obligatori" (ngModelChange)="selectObligatori($event)" ></mat-checkbox></span>
+		</mat-form-field>
+		
+		<mat-form-field *ngIf="isText" class="col-12">
+			<input type="text" matInput name="T" placeholder="{{Titol}}" (ngModelChange)="addInput($event)" [ngModel]="T">									
+			<span matSuffix *ngIf="hasObligatori"><mat-checkbox  [ngModel] = "Obligatori" (ngModelChange)="selectObligatori($event)" ></mat-checkbox></span>
+		</mat-form-field>
+		
+	</mat-card-header>
+	<mat-card-content class="col-12">
+		
+		<div [class.tatxat]="l.tmp_action === 'D'" *ngFor="let l of CampMultiple.Val; let i = index ">			
+		 	<span *ngIf="!isText">{{l.cm_idForeignKey.Val | filterSelect: Extres}}</span>
+		 	<span *ngIf="isText"> {{l.cm_Text.Val}}</span>
+			(<span (click)="remove(l.cm_idForeignKey.Val)" class="material-icons" style="cursor: pointer; font-size:7px">clear</span>), 
+		</div>
+				
+	</mat-card-content>
+	<mat-card-actions>
+	</mat-card-actions>
+</mat-card>

@@ -1,0 +1,13 @@
+<form #formulari="ngForm">
+	<div class="container-fluid">
+		<div class="row">
+			<input matInput type="text" [(ngModel)]="Field" name="T" placeholder="Entra el text" /> 
+			<mat-radio-group class="example-radio-group" (change)="onChange($event)">
+			Resultats: 
+			<div *ngFor="let s of Extres | filterSelectText: Field">
+				<mat-radio-button [value] = "s"> {{s.nom.Val}}	</mat-radio-button>
+			</div>
+			</mat-radio-group>
+		</div>
+	</div>
+</form>
