@@ -42,6 +42,7 @@ export class CompanyiesEspectaclesListComponent implements OnInit, AfterViewInit
   showCompanyia(Row: CompanyiaRow) {
     let E = Row;
     if (!Row) { E = new CompanyiaRow(); E.getNew(); } else { E.tmp_action = 'U'; }
+    this.CompanyiaTemp = E;
     let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Companyies'] }).afterClosed()
       .subscribe( (R: CompanyiaRow ) => { this.reload(); });
   }

@@ -28,9 +28,9 @@ export class CompanyiaEspectaclePreusObject {
     }
   }
 
-  getCompanyiaById(valor: NumberType): CompanyiaRow { return this.Companyies.getById('c_idCompanyia', valor.Val); }
-  getPreuById(valor: NumberType): PreuRow { return this.Preus.getById('p_idPreu', valor.Val); }
-  getPreusFromEspectacle(valor: NumberType): PreuRow[] { return this.Preus.getByFk('p_idEspectacle', valor.Val); }
+  getCompanyiaById(valor: NumberType): CompanyiaRow { let T = this.Companyies.getById('c_idCompanyia', valor.Val); return (T) ? T : new CompanyiaRow(); }
+  getPreuById(valor: NumberType): PreuRow { let T = this.Preus.getById('p_idPreu', valor.Val); return (T) ? T : new PreuRow(); }
+  getPreusFromEspectacle(valor: NumberType): PreuRow[] { return (valor.Val > 0) ? this.Preus.getByFk('p_idEspectacle', valor.Val) : []; }
 
 }
 
