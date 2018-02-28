@@ -37,9 +37,17 @@ class MyAPI extends API
     
     protected function getDadesTaulaAll() {
         $Taula = $this->request['post']['taula'];        
+        
         $SelectC ='Select FOUND_ROWS() as c';
-        $RET = $this->runQuery("Select SQL_CALC_FOUND_ROWS * from {$Taula}", array(), false, true);
-        $c = $this->runQuery("Select FOUND_ROWS() as c", array(), true, true);
+        $Select = "Select SQL_CALC_FOUND_ROWS * from {$Taula} WHERE 1 = 1 ";
+        if (isset($this->request['post']['filter1'])) $Select .= " AND ( ".$this->request['post']['filter1'] . ") ";
+        if (isset($this->request['post']['filter2'])) $Select .= " AND (".$this->request['post']['filter2'] . ") ";
+        if (isset($this->request['post']['filter3'])) $Select .= " AND (".$this->request['post']['filter3'] . ") ";
+        
+        // var_dump($Select);
+        
+        $RET = $this->runQuery($Select, array(), false, true);
+        $c = $this->runQuery($SelectC, array(), true, true);
         
         if (empty($RET)) return array("No he trobat cap valor", 500);
         else return array(array('List'=>$RET, 'c'=>$c['c']), 200);

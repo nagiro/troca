@@ -1,4 +1,4 @@
-import { NumberType, TextType, DateType, BooleanType, HoraType, TableRow, FieldConfig } from '../helpers/type-helper.object';
+import { NumberType, TextType, DateType, BooleanType, HoraType, TableRow, FieldConfig, TableSearchList } from '../helpers/type-helper.object';
 
 export class PreuFields {
   p_idPreu = new NumberType( new FieldConfig('p_idPreu', 'Id', 'Input', false, 1 ) );
@@ -11,6 +11,20 @@ export class PreuFields {
 export class PreuRow extends TableRow<PreuFields> {
   constructor() {
     super(PreuFields);
+  }
+  
+  getNew(idEspectacle: NumberType) {
+    this.tmp_action = 'A';
+    this.Fields.p_idEspectacle.Val = idEspectacle.Val;
+  }
+  
+}
+
+export class PreusSearchList extends TableSearchList<PreuRow, PreuFields> {
+  constructor(J: any = {}) { super(PreuRow, J); }
+  
+  getFromEspectacle(idE: NumberType) {
+    return this.Rows.filter( X => X.Fields.p_idEspectacle.Val === idE.Val );
   }
 }
 

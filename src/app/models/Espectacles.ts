@@ -12,6 +12,12 @@ export class EspectacleFields {
 
 export class EspectacleRow extends TableRow<EspectacleFields> {
   constructor() { super(EspectacleFields); }
+  
+  getNew(idCompanyia: NumberType) {
+    this.tmp_action = 'A';
+    this.Fields.ep_idCompanyia.Val = idCompanyia.Val;
+  }
+  
 }
 export class EspectaclesList extends TableRowList<EspectacleRow, EspectacleFields> {}
 
