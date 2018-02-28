@@ -29,6 +29,7 @@ export class CompanyiaEspectaclePreusObject {
   }
 
   getCompanyiaById(valor: NumberType): CompanyiaRow { return this.Companyies.getById('c_idCompanyia', valor.Val); }
+  getPreuById(valor: NumberType): PreuRow { return this.Preus.getById('p_idPreu', valor.Val); }
   getPreusFromEspectacle(valor: NumberType): PreuRow[] { return this.Preus.getByFk('p_idEspectacle', valor.Val); }
 
 }

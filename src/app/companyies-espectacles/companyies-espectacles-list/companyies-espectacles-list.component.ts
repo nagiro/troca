@@ -3,12 +3,15 @@ import { TableModelListData, DatabaseTypeBase, TableRow, TableRowList, TableSear
 import { CompanyiaEspectaclePreusObject } from '../../models/CompanyiesEspectaclesPreus';
 import { DbObject } from '../../models/DbObject.object';
 import { EspectacleFields, EspectacleRow, EspectaclesSearchList } from '../../models/Espectacles';
+import { PreuRow } from '../../models/Preus';
 import { CompanyiaFields, CompanyiaRow, CompanyiesSearchList } from '../../models/companyies';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 
 @Component({
   selector: 'app-companyies-espectacles-list',
@@ -20,6 +23,7 @@ export class CompanyiesEspectaclesListComponent implements OnInit, AfterViewInit
   Params = new HttpParams();
   CEP = new CompanyiaEspectaclePreusObject();
   HttpCEP = new BehaviorSubject<HttpParams>(new HttpParams());
+  CompanyiaTemp  = new CompanyiaRow();
 
   constructor(private _db: DbObject, private _dialog: MatDialog) {
 
@@ -47,6 +51,13 @@ export class CompanyiesEspectaclesListComponent implements OnInit, AfterViewInit
     if (!Row) { E = new EspectacleRow(); E.getNew(); } else { E.tmp_action = 'U'; }
     let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Espectacles'] }).afterClosed()
       .subscribe( (R: EspectacleRow ) => { this.reload(); });
+  }
+
+  showPreu(Row: PreuRow) {
+    let E = Row;
+    if (!Row) { E = new PreuRow(); E.getNew(); } else { E.tmp_action = 'U'; }
+    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Preus'] }).afterClosed()
+      .subscribe( (R: PreuRow ) => { this.reload(); });
   }
 
 }

@@ -28,12 +28,13 @@ export class DbObject {
     P = P.append('taula', $Taula);
     return this.http.post<T>( this.base + '/getDadesTaulaAll', P );
   }
-  
-  public getCompanyiesEspectaclesPreu(P: HttpParams) {
+
+  /* Retorna un JSON */
+  public getCompanyiesEspectaclesPreu(P: HttpParams): any {
     P = P.append('taula', 'CompanyiesEspectaclesPreus');
-    return this.http.post<CompanyiaEspectaclePreusSearchList>( this.base + '/getDadesTaulaAll', P );
+    return this.http.post<any>( this.base + '/getDadesTaulaAll', P );
   }
-  
+
   public getCompanyies(P: HttpParams) {
     P = P.append('taula', 'Companyies');
     return this.http.post<CompanyiesSearchList>( this.base + '/getDadesTaulaAll', P );
@@ -42,7 +43,7 @@ export class DbObject {
     P = P.append('taula', 'Espectacles');
     return this.http.post<EspectaclesSearchList>( this.base + '/getDadesTaulaAll', P );
   }
-  
+
   public getCompanyiaById(id) {
     let P = new HttpParams();
     P = P.append('taula', 'Companyies');

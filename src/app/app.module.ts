@@ -21,6 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { MatPaginatorModule, MatDialogModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule, MatInput } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,6 +55,7 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     FormsModule,
     FormHelperModule,
+    MatIconModule,
   ],
   providers: [
     HttpClient,
