@@ -1,5 +1,8 @@
 import { GlobalVarsService } from '../helpers/global-vars.service';
 import { NotificationService } from '../helpers/notification.service';
+import { ToBDDObject } from '../helpers/type-helper.object';
+import { EspectaclesSearchList } from './Espectacles';
+import { CompanyiaFields, CompanyiesSearchList } from './companyies';
 import { HttpParams } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 
@@ -21,9 +24,35 @@ export class DbObject {
     return this.http.get<number>( this.base + '/getNew', { params: P }  );
   }
 
-  public getCompanyiesEspectaclesList(P: HttpParams): Observable<any> {
-    P = P.append('taula', 'companyiesespectaclesllistat');
-    return this.http.post<any>( this.base + '/getDadesTaulaAll', P );
+  public getAllTableRows<T>($Taula, P: HttpParams): Observable<T> {
+    P = P.append('taula', $Taula);
+    return this.http.post<T>( this.base + '/getDadesTaulaAll', P );
+  }
+  
+  public getCompanyiesEspectaclesPreu(P: HttpParams) {
+    P = P.append('taula', 'CompanyiesEspectaclesPreus');
+    return this.http.post<CompanyiaEspectaclePreusSearchList>( this.base + '/getDadesTaulaAll', P );
+  }
+  
+  public getCompanyies(P: HttpParams) {
+    P = P.append('taula', 'Companyies');
+    return this.http.post<CompanyiesSearchList>( this.base + '/getDadesTaulaAll', P );
+  }
+  public getEspectacles(P: HttpParams) {
+    P = P.append('taula', 'Espectacles');
+    return this.http.post<EspectaclesSearchList>( this.base + '/getDadesTaulaAll', P );
+  }
+  
+  public getCompanyiaById(id) {
+    let P = new HttpParams();
+    P = P.append('taula', 'Companyies');
+    P = P.append('camp', 'c_idCompanyia');
+    P = P.append('id', String(id));
+    return this.http.post<CompanyiaFields>( this.base + '/getDadesTaulaById', P );
+  }
+  
+  public doSave( O: ToBDDObject ) {
+    return this.http.post<Response>( this.base + '/doSave', O );
   }
 
   // Fem consulta i envio els paràmetres que és un observable combinat
@@ -46,9 +75,6 @@ export class DbObject {
     return this.http.post<Response>( this.base + '/doSave', T );
   }
 
-  public saveUsuari( UE: ToBDDObject ) {
-    return this.http.post<Response>( this.base + '/doSave', UE );
-  }
 
   public uploadFile(fileToUpload: File, TipusArxiu: ElementExtra, idU: number): Observable<Response> {
     let P = new FormData();

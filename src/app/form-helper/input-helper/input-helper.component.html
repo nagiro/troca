@@ -1,6 +1,6 @@
 
 <mat-form-field style="width:100%">
-	<input matInput placeholder="{{Titol}}" [ngModel]="Dada.Val" (ngModelChange)="update($event)" name="{{Nom}}">
+	<input [disabled]="!Dada.FieldConfig.Visible" matInput placeholder="{{Titol}}" [ngModel]="Dada.Val" (ngModelChange)="update($event)" name="{{Nom}}">
 	<span *ngIf="isCO" matSuffix><mat-checkbox [ngModel] = "CampsObligats" (ngModelChange)="updateObligat($event)" name="o_Camp1"></mat-checkbox></span>
 </mat-form-field>
 

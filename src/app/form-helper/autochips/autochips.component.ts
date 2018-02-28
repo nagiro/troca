@@ -1,4 +1,4 @@
-import { ElementExtra, CampsMultiplesModel, CampsMultiplesFields, MultipleType } from '../../helpers/type-helper.object';
+import { ElementExtra, CampsMultiplesFields, MultipleType } from '../../helpers/type-helper.object';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { MatSelectChange } from '@angular/material/select';

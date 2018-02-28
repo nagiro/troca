@@ -1,17 +1,29 @@
 <div class="row">
 	<mat-card class="col-12">
 		<mat-card-header>
-			<mat-card-title> Companyies i espectacles </mat-card-title>
+			<mat-card-title> Companyies </mat-card-title>
 			<mat-form-field>
-		    		<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+		    		<input matInput placeholder="Filter">
 		  	</mat-form-field>
 		</mat-card-header>
-		<mat-card-content>
-		
-		  <table class="table">
-		  	<tr><td *ngFor="let Col of DisplayedColumns">{{Col}}</td></tr>
-		  	<tr *ngFor="let Row of CompanyiesEspectacles.Rows">
-		  		<td *ngFor="let Col of DisplayedColumns">{{Row.Fields[Col].Val}}</td>
+		<mat-card-content>		
+		  <table class="table">		  	 
+		  	<tr *ngFor="let Row of CEP.Espectacles.RowList"		  		
+		  	>
+		  		<td (click)="showEspectacle( Row )">
+		  			<span>{{Row.Fields.ep_Nom}}</span> 
+		  			<span style="font-size:10px">{{Row.Fields.ep_TipusEspectacle}}</span>
+		  		</td>
+		  		<td (click)="showCompanyia( CEP.getCompanyiaById(Row.Fields.ep_idCompanyia) )">
+		  			<span>{{CEP.getCompanyiaById(Row.Fields.ep_idCompanyia).Fields.c_Nom}}</span>
+		  			<div style="font-size:10px; margin-left:5px;">
+		  				{{CEP.getCompanyiaById(Row.Fields.ep_idCompanyia).Fields.c_Responsable}} _ 
+		  				{{CEP.getCompanyiaById(Row.Fields.ep_idCompanyia).Fields.c_Telefon}} _ 
+		  				{{CEP.getCompanyiaById(Row.Fields.ep_idCompanyia).Fields.c_Email}}</div>
+		  		</td>
+		  		<td>
+		  			<div *ngFor="let P of CEP.getPreusFromEspectacle( Row.Fields.ep_idEspectacle )">{{ P.Fields.p_PreuAC }} _ {{ P.Fields.p_PreuSC }} _ {{ P.Fields.p_Text }}</div>
+		  		</td>
 		  	</tr>
 		  </table>
 		
@@ -19,4 +31,5 @@
 	
 		</mat-card-content>
 	</mat-card>
+
 </div>

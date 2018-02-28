@@ -1,6 +1,5 @@
-<mat-form-field style="width:85%">
-	<mat-select placeholder="{{Titol}}" name="{{Nom}}"  [ngModel]="Dada.Val" (ngModelChange)="update($event)">
+<mat-form-field>
+	<mat-select [disabled] ="!Dada.FieldConfig.Visible" placeholder="{{Titol}}" name="{{Nom}}"  [ngModel]="Dada.Val" (ngModelChange)="update($event)">
 		<mat-option *ngFor="let s of Extres" [value]="s.idn.Val">{{s.nom.toString()}}</mat-option>
 	</mat-select>							    						
 </mat-form-field>
-<span *ngIf="isCO" matSuffix><mat-checkbox [ngModel] = "CampsObligats" (ngModelChange)="updateObligat($event)" name="o_Camp1"></mat-checkbox></span>

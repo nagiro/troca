@@ -5,31 +5,52 @@ interface NoParamConstructor<T> {
     new (): T;
 }
 
+export class FieldConfig {
+  FieldTitol = '';
+  FieldName = '';
+  FieldType = 'Input';  // Input, Select
+  Visible = true;
+  Cols = 2;
+
+  constructor($FieldName = '', $FieldTitol = '', $FieldType = 'Input', $Visible = true, $Cols = 2) {
+    this.FieldTitol = $FieldTitol;
+    this.FieldName = $FieldName;
+    this.FieldType = $FieldType;
+    this.Visible = $Visible;
+    this.Cols = $Cols;
+  }
+
+}
+
 /* Mètodes abstractes que ha de tenir cada camp d'una taula */
 export abstract class DatabaseTypeBase {
   Val: any;
-  FieldTitol: string;
-  FieldName: string;
+  Extres: ElementExtra[];
+  FieldConfig: FieldConfig;
+
   abstract toBDD(): string;
   abstract fromBDD(a: any): void;
   abstract toString(): string;
+
 }
 
 /* Mètodes abstractes que ha de tenir una camp de tipus d'una taula */
 export abstract class DatabaseType<T> extends DatabaseTypeBase {
   Val: T;
+  Extres = [];
+  FieldConfig = new FieldConfig();
 }
 
 /* Implementació de classe de camp que hi ha a una taula en formats */
 export class DateType implements DatabaseType<Date> {
   Val: Date = null;
-  FieldTitol = '';
-  FieldName = '';
+  Extres = [];
+  FieldConfig = new FieldConfig();
 
-  constructor( $FieldName = '', $FieldTitol = '', $default = true) {
+  constructor( $FieldConfig?: FieldConfig, $default = true) {
     if ($default) { this.Val = new Date(); }
-    this.FieldTitol = $FieldTitol;
-    this.FieldName = $FieldName;
+    if ($FieldConfig) { this.FieldConfig = $FieldConfig; }
+    else { this.FieldConfig.FieldType = 'Date'; }
   }
 
   toBDD() { return (this.Val) ? this.Val.getFullYear() + '-' + ( Number(this.Val.getMonth()) + 1 ) + '-' + this.Val.getDate() : null; }
@@ -42,13 +63,13 @@ export class DateType implements DatabaseType<Date> {
 /* Implementació de classe de camp que hi ha a una taula en formats */
 export class HoraType implements DatabaseType<string> {
   Val: string = null;
-  FieldTitol = '';
-  FieldName = '';
+  Extres = [];
+  FieldConfig = new FieldConfig();
 
-  constructor($FieldName = '', $FieldTitol = '', $default = true) {
+  constructor($FieldConfig?: FieldConfig, $default = true) {
     if ($default) { this.Val = '00:00'; }
-    this.FieldTitol = $FieldTitol;
-    this.FieldName = $FieldName;
+    if ($FieldConfig) { this.FieldConfig = $FieldConfig; }
+    else { this.FieldConfig.FieldType = 'Input'; }
   }
 
   toBDD() { return (this.Val) ? this.Val : null; }
@@ -61,12 +82,12 @@ export class HoraType implements DatabaseType<string> {
 /* Implementació de classe de camp que hi ha a una taula en formats */
 export class NumberType implements DatabaseType<number> {
   Val = 0;
-  FieldTitol = '';
-  FieldName = '';
+  Extres = [];
+  FieldConfig = new FieldConfig();
 
-  constructor($FieldName = '', $FieldTitle = '') {
-    this.FieldTitol = $FieldTitle;
-    this.FieldName = $FieldName;
+  constructor($FieldConfig?: FieldConfig, $Extres: ElementExtra[] = []) {
+    this.Extres = $Extres;
+    if ($FieldConfig) { this.FieldConfig = $FieldConfig; }
   }
 
   toBDD() { return this.Val.toString(); }
@@ -78,13 +99,13 @@ export class NumberType implements DatabaseType<number> {
 /* Implementació de classe de camp que hi ha a una taula en formats */
 export class TextType implements DatabaseType<string> {
   Val = '';
-  FieldTitol = '';
-  FieldName = '';
+  Extres = [];
+  FieldConfig = new FieldConfig();
 
-  constructor($FieldName = '', $FieldTitle = '') {
-    this.FieldTitol = $FieldTitle;
-    this.FieldName = $FieldName;
+  constructor($FieldConfig?: FieldConfig) {
+    if ($FieldConfig) { this.FieldConfig = $FieldConfig; }
   }
+
 
   toBDD() { return this.Val; }
   fromBDD(v: string) { if (v && v !== null) { this.Val = v; } }
@@ -117,12 +138,12 @@ export class ElementExtra {
 /* Implementació de classe de camp que hi ha a una taula en formats */
 export class BooleanType implements DatabaseType<number> {
   Val = 0;
-  FieldTitol = '';
-  FieldName = '';
+  Extres = [];
+  FieldConfig = new FieldConfig();
 
-  constructor($FieldName = '', $FieldTitle = '') {
-    this.FieldTitol = $FieldTitle;
-    this.FieldName = $FieldName;
+  constructor($FieldConfig?: FieldConfig) {
+    this.Extres = [new ElementExtra(0, 'No'), new ElementExtra(1, 'Sí')];
+    if ($FieldConfig) { this.FieldConfig = $FieldConfig; }
   }
 
   toBDD() { return String(this.Val); }
@@ -157,13 +178,14 @@ export class CampsMultiplesFields {
 /* Implementació de classe de camp que hi ha a una taula en formats */
 export class MultipleType implements DatabaseType<CampsMultiplesFields[]> {
   Val: CampsMultiplesFields[] = [];
-  FieldTitol = '';
-  FieldName = '';
+  Extres = [];
+  FieldConfig: FieldConfig = new FieldConfig();
   Taula = '';
   NomCamp = '';
 
-  constructor(T: string, N: string, $FieldName = '', $FieldTitol = '') {
-    this.Taula = T; this.NomCamp = N; this.FieldTitol = $FieldTitol; this.FieldName = $FieldName;
+
+  constructor(T: string, N: string, $FieldConfig?: FieldConfig) {
+    this.Taula = T; this.NomCamp = N; this.FieldConfig = $FieldConfig;
   }
 
   toBDD() { return JSON.stringify(this.Val);  } /* Aquesta no va ... i no cal que vagi */
@@ -286,35 +308,76 @@ export class ToBDDObject {
 
 }
 
+export class TableRowFieldList {
+  FieldList: DatabaseTypeBase[] = [];
+}
 
-export class TableRow {
-  Fields: DatabaseTypeBase[] = [];
+export class TableRow<T> {
+  Fields: T;
   tmp_action = '-'; // (A)dd, (U)pdate, (D)elete
   tmp_exist_in_bdd = false; // Informa si aquest registre és de bdd o generat pel formulari
 
-  constructor() {}
+  constructor(nou: new() => T) {
+    this.Fields = new nou();
+  }
 
   toBDD( nomTaula: string, returnOnlyUpdates = true ): RowValor {
 
     let Row = new RowValor( nomTaula );
     Row.setAction( this.tmp_action );
 
-    this.Fields.forEach( camp => {
-        Row.addRowField( new CampValor( camp.FieldName, camp.toBDD() ) );
+    /* Per cada camp a la fila */
+    Object.keys(this.Fields).forEach( camp => {
+
+      /* Si el camp és múltiple ho guardo com a subcamps */
+      if (this.Fields[camp] instanceof MultipleType) {
+
+        /* Per cada entrada a camps múltiples */
+        this.Fields[camp].Val.forEach( (X: CampsMultiplesFields) => {
+
+          let RowMultiples = new RowValorMultiples();
+
+          /* Per cada camp de la taula CampsMultiples de l'entrada si és tmp_action el guardem a part */
+          Object.keys(X).forEach( nomCamp => {
+
+            if (nomCamp !== 'tmp_action' && nomCamp !== 'tmp_exist_in_bdd') RowMultiples.add( new CampValor( nomCamp, X[nomCamp].toBDD() ) );
+            else RowMultiples.setAction( X.tmp_action );
+
+          });
+
+          /* Guardo el camp a multiples a bdd si és una acció A o D */
+          if ( returnOnlyUpdates && ( RowMultiples.tmp_action === 'A' || RowMultiples.tmp_action === 'D') ) Row.addRowMultiple( RowMultiples );
+          else Row.addRowMultiple( RowMultiples );
+
+        });
+      } else {
+
+        Row.addRowField( new CampValor( camp, this.Fields[camp].toBDD() ) );
+
+      }
     });
 
     return Row;
   }
 
-  /* J és una estructura que arriba de la bdd en format objectes */
-  fromBDD(J: any, existInBDD: boolean) {
+  fromOtherTable( TR: TableRow<T> ) {    
+    Object.keys(this.Fields).forEach(X => this.Fields[X] = TR.Fields[X]);
+  }
 
+  /* J és una estructura que arriba de la bdd en format objectes */
+  fromBDD(J: any, CM: CampsMultiplesFields[], existInBDD: boolean) {
       this.tmp_exist_in_bdd = existInBDD;
 
-      this.Fields.forEach( F => {
-        F.fromBDD(J[F.FieldName]);
-      });
-      this.tmp_action = '-';
+      for (let i of Object.keys(this.Fields)) {
+        if ( this.Fields[i].fromBDD ) {
+            if (this.Fields[i] instanceof MultipleType) {
+              this.Fields[i].fromBDD(CM);
+            } else {
+              this.Fields[i].fromBDD(J[i]);
+            }
+        }
+      }
+      this.tmp_action = 'L';
   }
 
   getNew(a?: any, b?: any, c?: any, d?: any) {
@@ -323,53 +386,71 @@ export class TableRow {
 
   hasAction() { return (this.tmp_action !== '-'); }
 
+  toTableRowFieldList() {
+    let R = new TableRowFieldList();
+    Object.keys(this.Fields).forEach(X => { R.FieldList.push( this.Fields[X] ); });    
+    return R;
+  }
+
 }
 
 /* Model de dades de la consulta de llistat T1 és el model Taula i T2 els camps (Fields) */
-export class TableModelList {
+export class TableSearchList<T1 extends TableRow<T2>, T2> {
   c = new NumberType();
-  Rows: TableRow[] = [];
+  Rows: T1[] = [];
   get getNumSelectedRows() { return this.c; }
 
   /* Consulta format { c: number, List: TableRows } */
-  constructor(J: any) {
+  constructor(TRow: NoParamConstructor<T1>, J: any) {
 
     if ( J && J.c > 0 ) {
       this.c.Val = J.c;
       J.List.forEach((E: any) => {
-        let ET = new TableRow(); ET.fromBDD(E, true); this.Rows.push(ET);
+        let TR = new TRow(); TR.fromBDD(E, [], true); this.Rows.push(TR);
       });
     }
   }
 
 }
 
-export class TableModelArray {
+/* Llistat de files d'una taula sense la c de cerca */
+export class TableRowList<T1 extends TableRow<T2>, T2> {
 
-  Rows: TableRow[] = [];
+  RowList: T1[] = [];
 
-  addModel(DadesTaula: TableRow) { this.Rows.push( DadesTaula ); }
+  addModel(DadesTaula: T1) { this.RowList.push( DadesTaula ); }
+  addModelNoRepeat(DadesTaula: T1, $Camp) {
+    if (this.RowList.findIndex( X => X.Fields[$Camp].Val === DadesTaula.Fields[$Camp].Val) < 0 ) { this.addModel(DadesTaula); }
+   }
 
-  update(DadesTaula: TableRow, IndexExisteix: number) {
+  getById($Camp: string, $Valor: any): TableRow<T2> {
+    return this.RowList.find( X => X.Fields[$Camp].Val === $Valor);
+  }
+  
+  getByFk($Camp: string, $Valor: any): TableRow<T2>[] {
+    return this.RowList.filter( X => X.Fields[$Camp].Val === $Valor);
+  }
+
+  update(DadesTaula: T1, IndexExisteix: number) {
 
 
     /* Element no existeix */
     if ( IndexExisteix === -1 ) {
       switch ( DadesTaula.tmp_action ) {
-        case 'A': this.Rows.push( DadesTaula ); break;   // Element no existeix, però ha marcat una A
+        case 'A': this.RowList.push( DadesTaula ); break;   // Element no existeix, però ha marcat una A
         case 'D': {} break;                   // Element no existeix, però ha marcat una D, no fem res...
       }
     } else {
 
-      if ( this.Rows[IndexExisteix].tmp_exist_in_bdd) {
+      if ( this.RowList[IndexExisteix].tmp_exist_in_bdd) {
         switch ( DadesTaula.tmp_action ) {
-          case 'A': this.Rows[IndexExisteix].tmp_action = 'U'; break;    // Existeix aquí i a la bdd, el deixem igual.
-          case 'D': this.Rows[IndexExisteix].tmp_action = 'D'; break;    // Existeix aquí i a la base de dades, marquem esborrat
+          case 'A': this.RowList[IndexExisteix].tmp_action = 'U'; break;    // Existeix aquí i a la bdd, el deixem igual.
+          case 'D': this.RowList[IndexExisteix].tmp_action = 'D'; break;    // Existeix aquí i a la base de dades, marquem esborrat
         }
       } else {
         switch ( DadesTaula.tmp_action ) {
-          case 'A': this.Rows[IndexExisteix].tmp_action = 'A'; break;    // Existeix aquí, però no a la base de dades, li posem una A
-          case 'D': this.Rows.splice(IndexExisteix, 1); break;           // Existeix aquí, però no a la base de dades, l'eliminem de la llista
+          case 'A': this.RowList[IndexExisteix].tmp_action = 'A'; break;    // Existeix aquí, però no a la base de dades, li posem una A
+          case 'D': this.RowList.splice(IndexExisteix, 1); break;           // Existeix aquí, però no a la base de dades, l'eliminem de la llista
         }
 
       }
@@ -379,9 +460,9 @@ export class TableModelArray {
   }
 
   /* Retorna una llista amb una referència nova */
-  cloneList(): TableRow[] {
+  cloneList(): T1[] {
     let L = [];
-    this.Rows.forEach( X => L.push(X) );
+    this.RowList.forEach( X => L.push(X) );
     return L;
   }
 

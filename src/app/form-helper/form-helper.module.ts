@@ -12,6 +12,8 @@ import { InputHelperComponent } from './input-helper/input-helper.component';
 import { SelectHelperComponent } from './select-helper/select-helper.component';
 import { DatepickerHelperComponent } from './datepicker-helper/datepicker-helper.component';
 import { MatTableModule } from '@angular/material/table';
+import { FormEditComponent } from './form-edit/form-edit.component';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -26,6 +28,7 @@ import { MatTableModule } from '@angular/material/table';
     MatRadioModule,
     MatDatepickerModule,
     MatTableModule,
+    MatDialogModule,
   ],
   exports: [
     FilterSelectTextPipe,
@@ -46,9 +49,11 @@ import { MatTableModule } from '@angular/material/table';
     InputHelperComponent,
     SelectHelperComponent,
     DatepickerHelperComponent,
+    FormEditComponent,
   ],
   entryComponents: [
     SelectSearchComponent,
+    FormEditComponent,
   ]
 })
 export class FormHelperModule { }

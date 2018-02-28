@@ -12,10 +12,13 @@ import { NotificationService } from './helpers/notification.service';
 import { Routes, RouterModule } from '@angular/router';
 import { CompanyiesEspectaclesListComponent } from './companyies-espectacles/companyies-espectacles-list/companyies-espectacles-list.component';
 import { CompanyiesEspectaclesFormComponent } from './companyies-espectacles/companyies-espectacles-form/companyies-espectacles-form.component';
+import { FormEditComponent } from './form-helper/form-edit/form-edit.component';
+import { FormHelperModule } from './form-helper/form-helper.module';
 import { DbObject } from './models/DbObject.object';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
-import { MatPaginatorModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
+import { MatPaginatorModule, MatDialogModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule, MatInput } from '@angular/material/input';
@@ -46,8 +49,11 @@ const appRoutes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatPaginatorModule,
+    MatDialogModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    FormsModule,
+    FormHelperModule,
   ],
   providers: [
     HttpClient,

@@ -1,0 +1,48 @@
+<form #formulari="ngForm">
+<div class="row">
+	<div *ngFor="let F of E.FieldList; let i = index" [ngSwitch]="F.FieldConfig.FieldType" class="col-{{F.FieldConfig.Cols}}">
+		<div *ngSwitchCase="'Input'">
+			<app-input-helper
+					[Titol] = "F.FieldConfig.FieldTitol"
+  					[(Dada)] = "E.FieldList[i]"
+  					[Nom] = "F.FieldConfig.FieldName" 
+				></app-input-helper>
+		</div>
+		<div *ngSwitchCase="'Select'">
+			<app-select-helper
+					[Titol] = "F.FieldConfig.FieldTitol"
+  					[(Dada)] = "E.FieldList[i]"
+  					[Nom] = "F.FieldConfig.FieldName"
+  					[Extres] = "F.Extres" 
+			></app-select-helper>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-12 form-group">
+		<button 
+			type="submit" 
+			[disabled]="!formulari.form.valid" 
+			class="btn btn-success" 
+			(click)="doSave()">
+			Guardar
+		</button> &nbsp;
+		<button 
+			type="submit" 
+			[disabled]="!formulari.form.valid" 
+			class="btn btn-info" 
+			(click)="doCancel()">
+			Cancel·lar
+		</button> &nbsp;
+		<button 
+			type="submit" 
+			[disabled]="!formulari.form.valid" 
+			class="btn btn-danger" 
+			(click)="doDelete()">
+			Esborrar
+		</button> &nbsp;
+									
+	</div>
+</div>
+
+</form>

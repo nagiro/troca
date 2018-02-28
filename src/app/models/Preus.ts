@@ -1,14 +1,16 @@
-/*
-import { NumberType, TextType, TableModel, TableModelArray, DateType, BooleanType, HoraType } from '../helpers/type-helper.object';
+import { NumberType, TextType, DateType, BooleanType, HoraType, TableRow, FieldConfig } from '../helpers/type-helper.object';
 
-export class PreusFields {
-  p_idPreu = new NumberType();
-  p_idEspectacle = new NumberType();
-  p_PreuSC = new NumberType();
-  p_PreuAC = new NumberType();
-  p_Text = new TextType();
+export class PreuFields {
+  p_idPreu = new NumberType( new FieldConfig('p_idPreu', 'Id', 'Input', false, 1 ) );
+  p_idEspectacle = new NumberType( new FieldConfig('p_idEspectacle', 'Id', 'Input', false, 1 ) );
+  p_PreuSC = new NumberType( new FieldConfig('p_PreuSC', 'Sense Comis.', 'Input', false, 3 ) );
+  p_PreuAC = new NumberType( new FieldConfig('c_idCompanyia', 'Amb Comis.', 'Input', false, 3 ) );
+  p_Text = new TextType( new FieldConfig('p_Text', 'Text', 'Input', false, 3 ) );
 }
 
-export class PreusModel extends TableModel<PreusFields> {}
-export class PreusList extends TableModelArray<PreusModel, PreusFields> {}
-*/
+export class PreuRow extends TableRow<PreuFields> {
+  constructor() {
+    super(PreuFields);
+  }
+}
+
