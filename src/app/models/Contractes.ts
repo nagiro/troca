@@ -1,0 +1,66 @@
+import { TableRowList } from '../helpers/type-helper.object';
+import { ContractesControlSearchList, ContracteControlRow, ContractesControlList } from './ContractesControl';
+import { ContracteEspectacleRow, ContractesEspectaclesList } from './ContractesEspectacles';
+import { ContracteFuncioRow, ContractesFuncionsList } from './ContractesFuncions';
+import { EntitatRow, EntitatFields } from './Entitats';
+import { EspaiRow, EspaiFields } from './Espais';
+import { EspectaclesList, EspectacleRow } from './Espectacles';
+import { ProjectesList, ProjecteRow } from './Projectes';
+import { CompanyiesList, CompanyiaRow } from './companyies';
+
+export class ContractesObject {
+
+  ContractesControl = new ContractesControlList();
+  ContractesEspectacles = new ContractesEspectaclesList();
+  ContractesFuncions = new ContractesFuncionsList();
+  Projectes = new ProjectesList();
+  Entitats = new TableRowList<EntitatRow, EntitatFields>();
+  Espais = new TableRowList<EspaiRow, EspaiFields>();
+  Espectacles = new EspectaclesList();
+  Companyies = new CompanyiesList();
+  c = 0;
+
+  /* c: number, List: CompanyiaEspectaclePreusObject */
+  constructor(J?: any) {
+    if (J) {
+      this.c = J.c;
+      let L: any[] = J.List;
+      L.forEach( X => {
+        let T = new ContracteControlRow(); T.fromBDD(X, [], true);
+        this.ContractesControl.addModelNoRepeat( T , 'ctc_idContracte');
+
+        let E = new ContracteEspectacleRow(); E.fromBDD(X, [], true);
+        this.ContractesEspectacles.addModelNoRepeat( E , 'cte_idContracteEspectacle');
+
+        let P = new ContracteFuncioRow(); P.fromBDD(X, [], true);
+        this.ContractesFuncions.addModel( P );
+
+        let PR = new ProjecteRow(); PR.fromBDD(X, [], true);
+        this.Projectes.addModelNoRepeat(PR, 'pr_idProjecte');
+
+        let EN = new EntitatRow(); EN.fromBDD(X, [], true);
+        this.Entitats.addModelNoRepeat(EN, 'e_idAjuntament');
+
+         let ES = new EspaiRow(); ES.fromBDD(X, [], true);
+        this.Espais.addModelNoRepeat(ES, 'es_idEspai');
+
+        let EP = new EspectacleRow(); EP.fromBDD(X, [], true);
+        this.Espectacles.addModelNoRepeat(EP, 'ep_idEspectacle');
+
+        let C = new CompanyiaRow(); C.fromBDD(X, [], true);
+        this.Companyies.addModelNoRepeat(C, 'c_idCompanyia');
+
+      });
+    }
+  }
+
+  getEntitatById(id: number) { return this.Entitats.getById('e_idAjuntament', id); }
+  getProjecteById(id: number) { return this.Projectes.getById('pr_idProjecte', id); }
+  getEspaiById(id: number) { return this.Espais.getById('es_idEspai', id); }
+  getEspectacleById(id: number) { return this.Espectacles.getById('ep_idEspectacle', id); }
+  getCompanyiaById(id: number) { return this.Companyies.getById('c_idCompanyia', id); }
+  getContractesEspectaclesFromContracteControl(idCC: number): ContracteEspectacleRow[] { return this.ContractesEspectacles.getByFk('cte_idcontracte', idCC); }
+  getContractesFuncionsFromContractesEspectacles(idCE: number): ContracteFuncioRow[] { return this.ContractesFuncions.getByFk('ctf_idContracteEspectacle', idCE); }
+
+
+}

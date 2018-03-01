@@ -3,6 +3,12 @@ import { EspectacleFields, EspectacleRow } from './Espectacles';
 import { PreuFields, PreuRow } from './Preus';
 import { CompanyiaFields, CompanyiaRow } from './companyies';
 
+export class CompanyiaEspectaclePreuOneObject {
+  Companyia = new CompanyiaRow();
+  Espectacle = new EspectacleRow();
+  Preu = new PreuRow();
+}
+
 export class CompanyiaEspectaclePreusObject {
 
   Companyies = new TableRowList<CompanyiaRow, CompanyiaFields>();

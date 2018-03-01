@@ -1,0 +1,62 @@
+<form #heroForm="ngForm">
+
+	<div class="row">
+		<mat-card class="col-2">
+			<mat-card-header>
+				<mat-card-title> Projectes <span class="link" (click)="editProjecte(null)">+ projecte</span> </mat-card-title>				
+			</mat-card-header>
+			<mat-card-content>		
+			  <table class="table">		  	 		  	
+			  	<tr *ngFor="let Row of Projectes.Rows"
+			  	>
+			  		<td>
+			  			<div (click) = "editProjecte(Row)">
+			  				<span>{{Row.Fields.pr_nom}}</span>				  		
+				  		</div>
+				  		<span class="link" (click)="newContracte(Row.Fields.pr_idProjecte.Val)">+ contracte</span>
+			  		</td>		  		
+			  		
+			  	</tr>
+			  </table>
+						  
+			</mat-card-content>
+		</mat-card>
+
+		<mat-card class="col-10">
+			<mat-card-header>
+				<mat-card-title> Contractes </mat-card-title>
+				<mat-form-field>
+			    		<input matInput placeholder="Filter" name="S1" (ngModelChange)="FilterContracteControl($event)" [ngModel] = "ContractesSearch">
+			  	</mat-form-field>
+			</mat-card-header>
+			<mat-card-content>		
+			  <table class="table">		  	 		  	
+			  	<tr *ngFor="let Row of Contractes.ContractesControl.RowList">
+			  		<td><span>{{Row.Fields.ctc_idContracte.Val}}</span></td>
+			  		<td>
+			  			<span>{{Contractes.getEntitatById( Row.Fields.ctc_idEntitat.Val ).Fields.e_Nom.Val}}</span>
+			  			<span class="link" (click)="editControl(Row)">edita control</span> _
+			  		</td>
+			  		<td>
+			  			<div *ngFor="let CE of Contractes.getContractesEspectaclesFromContracteControl( Row.Fields.ctc_idContracte.Val )">
+			  				{{Contractes.getEspectacleById( CE.Fields.cte_idespectacle.Val).Fields.ep_Nom.Val}} _
+			  				{{Contractes.getCompanyiaById( Contractes.getEspectacleById( CE.Fields.cte_idespectacle.Val).Fields.ep_idCompanyia.Val ).Fields.c_Nom.Val }} _
+			  				{{Contractes.getEspaiById(CE.Fields.cte_idEspai.Val).Fields.es_Nom.Val }} _ 			  				
+			  				<div *ngFor="let CF of Contractes.getContractesFuncionsFromContractesEspectacles( CE.Fields.cte_idContracteEspectacle.Val)">
+			  					{{CF.Fields.ctf_Data}} _ {{CF.Fields.ctf_Hora_inici}} <span class="link" (click)="editFuncio(CF)">(edita funció)</span><br />
+			  				</div>
+			  				<span class="link" (click)="editEspectacle(CE)">(edita espectacle)</span>
+			  			</div>
+			  		</td>
+			  	</tr>
+			  </table>
+			
+			  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+		
+			</mat-card-content>
+		</mat-card>
+
+	
+	</div>
+	
+</form>

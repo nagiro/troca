@@ -21,7 +21,7 @@ class MyAPI extends API
         $Taula = $this->request['taula'];
         $Camp  = $this->request['camp'];
         
-        $RET = $this->runQuery("Select Max({$Camp}) + 1 as Max from {$Taula}", array(), true, true);
+        $RET = $this->runQuery("Select COALESCE(Max({$Camp})+1,1) as Max from {$Taula}", array(), true, true);        
         if (empty($RET)) return array("No he trobat cap valor", 500);
         else return array($RET, 200);
     } 
@@ -43,13 +43,17 @@ class MyAPI extends API
         if (isset($this->request['post']['filter1'])) $Select .= " AND ( ".$this->request['post']['filter1'] . ") ";
         if (isset($this->request['post']['filter2'])) $Select .= " AND (".$this->request['post']['filter2'] . ") ";
         if (isset($this->request['post']['filter3'])) $Select .= " AND (".$this->request['post']['filter3'] . ") ";
+        if (isset($this->request['post']['filter4'])) $Select .= " AND (".$this->request['post']['filter4'] . ") ";
+        if (isset($this->request['post']['filter5'])) $Select .= " AND (".$this->request['post']['filter5'] . ") ";
+        if (isset($this->request['post']['filter6'])) $Select .= " AND (".$this->request['post']['filter6'] . ") ";
+        if (isset($this->request['post']['filter7'])) $Select .= " AND (".$this->request['post']['filter7'] . ") ";
         
         // var_dump($Select);
         
         $RET = $this->runQuery($Select, array(), false, true);
         $c = $this->runQuery($SelectC, array(), true, true);
         
-        if (empty($RET)) return array("No he trobat cap valor", 500);
+        if (empty($RET)) return array(array('List'=>array(), 'c' => 0 ), 200);
         else return array(array('List'=>$RET, 'c'=>$c['c']), 200);
     }
     

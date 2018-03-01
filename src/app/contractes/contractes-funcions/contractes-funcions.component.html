@@ -1,0 +1,27 @@
+<form #heroForm="ngForm">
+
+	<div class="row">
+		<mat-card class="col-12">
+			<mat-card-header>
+				<mat-card-title> Funcions <span class="link" (click)="addFuncio()">+ funció</span> </mat-card-title>				
+			</mat-card-header>
+			<mat-card-content>			
+			  <table class="table">		  	 		  	
+			  	<tr>
+			  		<td>{{EE.Entitat.Fields.e_Nom.Val}}</td>
+			  		<td>{{EE.Espai.Fields.es_Nom.Val}}</td>
+			  		<td>{{CE.Espectacle.Fields.ep_Nom.Val}}</td>
+			  		<td>{{CE.Companyia.Fields.c_Nom.Val}}</td>
+			  		<td>{{CE.Preu.Fields.p_PreuAC.Val}} _ {{CE.Preu.Fields.p_PreuSC.Val}} _ {{CE.Preu.Fields.p_Text.Val}}</td>
+			  		
+			  	</tr>
+			  </table>
+			
+			  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+		
+			</mat-card-content>
+		</mat-card>
+	
+	</div>
+	
+</form>

@@ -1,12 +1,12 @@
 import { FormEditComponent } from '../../form-helper/form-edit/form-edit.component';
 import { TableModelListData, DatabaseTypeBase, TableRow, TableRowList, TableSearchList, NumberType } from '../../helpers/type-helper.object';
-import { CompanyiaEspectaclePreusObject } from '../../models/CompanyiesEspectaclesPreus';
+import { CompanyiaEspectaclePreusObject, CompanyiaEspectaclePreuOneObject } from '../../models/CompanyiesEspectaclesPreus';
 import { DbObject } from '../../models/DbObject.object';
 import { EspectacleFields, EspectacleRow, EspectaclesSearchList } from '../../models/Espectacles';
 import { PreuRow, PreusSearchList } from '../../models/Preus';
 import { CompanyiaFields, CompanyiaRow, CompanyiesSearchList } from '../../models/companyies';
 import { HttpParams } from '@angular/common/http';
-import { Component, OnInit, AfterViewInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs/Observable';
@@ -19,6 +19,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   styleUrls: ['./companyies-espectacles-list.component.css']
 })
 export class CompanyiesEspectaclesListComponent implements OnInit, AfterViewInit {
+
+  @Input() CercaFromContracte = false;
+  @Output() CompanyiaEspectaclePreuForContracte = new EventEmitter<CompanyiaEspectaclePreuOneObject>();
 
   Params = new HttpParams();
   CompanyiesEspectaclesPreus = new CompanyiaEspectaclePreusObject();
@@ -60,6 +63,12 @@ export class CompanyiesEspectaclesListComponent implements OnInit, AfterViewInit
     this.HttpCEP.next(H);
   }
 
+  getEspectacles( idCompanyia: NumberType ) {
+    let H = this.HttpCEP.value;
+    H = H.set('filter4', ' ep_idCompanyia = ' + idCompanyia);
+    this.HttpCEP.next(H);
+  }
+
   showCompanyia(Row: CompanyiaRow) {
     let E = Row;
     if (!Row) { E = new CompanyiaRow(); E.getNew(); } else { E.tmp_action = 'U'; }
@@ -79,6 +88,16 @@ export class CompanyiesEspectaclesListComponent implements OnInit, AfterViewInit
     if (!Row) { E = new PreuRow(); E.getNew(idEspectacle); } else { E.tmp_action = 'U'; }
     let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Preus'] }).afterClosed()
       .subscribe( (R: PreuRow ) => { this.reload(); });
+  }
+
+  addToContract(P: PreuRow, E: EspectacleRow) {
+    let T = new CompanyiaEspectaclePreuOneObject();
+    let C = new CompanyiaRow();
+    C = this.CompanyiesEspectaclesPreus.getCompanyiaById( E.Fields.ep_idCompanyia );
+    T.Preu = P;
+    T.Espectacle = E;
+    T.Companyia = C;
+    this.CompanyiaEspectaclePreuForContracte.emit(T);
   }
 
 }

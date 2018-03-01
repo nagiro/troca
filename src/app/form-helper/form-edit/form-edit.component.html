@@ -16,6 +16,28 @@
   					[Extres] = "F.Extres" 
 			></app-select-helper>
 		</div>
+		<div *ngSwitchCase="'Textarea'">
+			
+			<app-textarea-helper
+					[Titol] = "F.FieldConfig.FieldTitol"
+  					[(Dada)] = "E.FieldList[i]"
+  					[Nom] = "F.FieldConfig.FieldName"  					
+			></app-textarea-helper>
+		</div>
+		<div *ngSwitchCase="'Date'">
+			<app-datepicker-helper
+					[Titol] = "F.FieldConfig.FieldTitol"
+  					[(Dada)] = "E.FieldList[i]"
+  					[Nom] = "F.FieldConfig.FieldName"  					
+			></app-datepicker-helper>
+		</div>
+		<div *ngSwitchCase="'Hora'">
+			<app-input-helper
+					[Titol] = "F.FieldConfig.FieldTitol"
+  					[(Dada)] = "E.FieldList[i]"
+  					[Nom] = "F.FieldConfig.FieldName" 
+				></app-input-helper>
+		</div>
 	</div>
 </div>
 <div class="row">

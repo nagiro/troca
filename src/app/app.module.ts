@@ -25,11 +25,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule, MatInput } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EntitatsEspaisListComponent } from './entitats-espais/entitats-espais-list/entitats-espais-list.component';
+import { ContractesListComponent } from './contractes/contractes-list/contractes-list.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ContractesMainComponent } from './contractes/contractes-main/contractes-main.component';
+import { ContractesFuncionsComponent } from './contractes/contractes-funcions/contractes-funcions.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'NotFound', pathMatch: 'full'},
   { path: 'Comercial', component: ContactesMainComponent },
+  { path: 'Espais', component: EntitatsEspaisListComponent },
+  { path: 'Contractes', component: ContractesMainComponent },
   { path: 'Companyies', component: CompanyiesEspectaclesListComponent },
+  
 ];
 
 
@@ -40,7 +50,11 @@ const appRoutes: Routes = [
     ContactesListComponent,
     ContactesFormComponent,
     CompanyiesEspectaclesListComponent,
-    CompanyiesEspectaclesFormComponent
+    CompanyiesEspectaclesFormComponent,
+    EntitatsEspaisListComponent,
+    ContractesListComponent,
+    ContractesMainComponent,
+    ContractesFuncionsComponent
   ],
   imports: [
     BrowserModule,
@@ -51,11 +65,14 @@ const appRoutes: Routes = [
     MatInputModule,
     MatPaginatorModule,
     MatDialogModule,
+    MatTabsModule,
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
     FormHelperModule,
     MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [
     HttpClient,

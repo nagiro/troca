@@ -17,11 +17,11 @@ export class DbObject {
   // Injectem el httpClient
   constructor(private http: HttpClient, private _n: NotificationService) {}
 
-  public getNewId($camp, $taula): Observable<number> {
+  public getNewId($camp, $taula): Observable<{Max: number}> {
     let P = new HttpParams();
     P = P.set('taula', $taula);
     P = P.append('camp', $camp);
-    return this.http.get<number>( this.base + '/getNew', { params: P }  );
+    return this.http.get<{Max: number}>( this.base + '/getNew', { params: P }  );
   }
 
   public getAllTableRows<T>($Taula, P: HttpParams): Observable<T> {

@@ -1,0 +1,28 @@
+	<mat-tab-group [selectedIndex] = "TabIndex">  
+	  <mat-tab label="Contractes">
+	  	<app-contractes-list
+	  		(whenNewContracte) = "nouContracte($event)"
+	  	></app-contractes-list>
+	  </mat-tab>
+
+	  <mat-tab label="Espectacle"  *ngIf="SeleccionoEspectacleDisabled">
+	  	<app-companyies-espectacles-list
+	  		[CercaFromContracte] = true
+	  		(CompanyiaEspectaclePreuForContracte) = "EsculloCompanyiaEspectacle($event)"
+	  	></app-companyies-espectacles-list>
+	  </mat-tab>
+	  <mat-tab label="Entitat i espai"  *ngIf="SeleccionoEspaiDisabled">
+	  	<app-entitats-espais-list
+	  		[CercaFromContracte] = true
+	  		(EntitatEspaiForContracte) = "EsculloEntitatEspai($event)"
+	  	></app-entitats-espais-list>
+	  </mat-tab>
+	  <mat-tab label="Sessions">
+	  	<app-contractes-funcions
+	  		[EE] = "EntitatsEspais"
+	  		[CE] = "CompanyiesEspectacles"
+	  		[ContracteEspectacle] = "ContracteEspectacle"
+	  		[ContracteControl] = "ContracteControl"
+	  	></app-contractes-funcions>	  	
+	  </mat-tab>
+	</mat-tab-group>

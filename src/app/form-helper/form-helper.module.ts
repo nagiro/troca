@@ -14,6 +14,7 @@ import { DatepickerHelperComponent } from './datepicker-helper/datepicker-helper
 import { MatTableModule } from '@angular/material/table';
 import { FormEditComponent } from './form-edit/form-edit.component';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TextareaHelperComponent } from './textarea-helper/textarea-helper.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
     InputHelperComponent,
     SelectHelperComponent,
     DatepickerHelperComponent,
+    TextareaHelperComponent,
   ],
   declarations: [
     AutochipsComponent,
@@ -50,6 +52,7 @@ import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
     SelectHelperComponent,
     DatepickerHelperComponent,
     FormEditComponent,
+    TextareaHelperComponent,
   ],
   entryComponents: [
     SelectSearchComponent,
