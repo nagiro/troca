@@ -1,7 +1,7 @@
 import { FormEditComponent } from '../../form-helper/form-edit/form-edit.component';
 import { NumberType, TableRowList } from '../../helpers/type-helper.object';
 import { CompanyiaEspectaclePreusObject } from '../../models/CompanyiesEspectaclesPreus';
-import { ContractesObject } from '../../models/Contractes';
+import { ContractesObject, ContracteWord } from '../../models/Contractes';
 import { ContracteControlRow } from '../../models/ContractesControl';
 import { ContracteEspectacleRow, ContractesEspectaclesList } from '../../models/ContractesEspectacles';
 import { ContracteFuncioRow, ContractesFuncionsList } from '../../models/ContractesFuncions';
@@ -89,14 +89,14 @@ export class ContractesListComponent implements OnInit {
     }
   }
 
-  
   FilterContracteControl($event: string) {
     let T = this.HttpCEP.value.set('filter1', '1 = 1');
     this.HttpCEP.next(T);
   }
-  
+
   genDoc(idContracteControl: number) {
-    
+    let CW = new ContracteWord(this.Contractes, idContracteControl);
+    this._db.doContracte( CW ).subscribe(X => {});
   }
-  
+
 }

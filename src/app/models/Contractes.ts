@@ -1,4 +1,4 @@
-import { TableRowList } from '../helpers/type-helper.object';
+import { TableRowList, RowValor } from '../helpers/type-helper.object';
 import { ContractesControlSearchList, ContracteControlRow, ContractesControlList } from './ContractesControl';
 import { ContracteEspectacleRow, ContractesEspectaclesList } from './ContractesEspectacles';
 import { ContracteFuncioRow, ContractesFuncionsList } from './ContractesFuncions';
@@ -62,5 +62,26 @@ export class ContractesObject {
   getContractesEspectaclesFromContracteControl(idCC: number): ContracteEspectacleRow[] { return this.ContractesEspectacles.getByFk('cte_idcontracte', idCC); }
   getContractesFuncionsFromContractesEspectacles(idCE: number): ContracteFuncioRow[] { return this.ContractesFuncions.getByFk('ctf_idContracteEspectacle', idCE); }
 
+}
 
+export class CECFTemp {
+  CE: RowValor = new RowValor('ContracteEspectacles');
+  CF: RowValor[] = [];
+}
+
+export class ContracteWord {
+  ContracteControl = new RowValor('ContractesControl');
+  ContracteEspectacles: CECFTemp[] = [];
+
+  constructor(CO: ContractesObject, idContracte: number) {
+    let CECF = new CECFTemp();
+    this.ContracteControl = CO.ContractesControl.getById('ctc_idContracte', idContracte).toBDD('ContractesControl');
+    CO.getContractesEspectaclesFromContracteControl( idContracte ).forEach( CEO => {
+      CO.getContractesFuncionsFromContractesEspectacles( CEO.Fields.cte_idContracteEspectacle.Val ).forEach( CFO => {
+        CECF.CF.push(CFO.toBDD('ContractesFuncions'));
+      });
+      CECF.CE = CEO.toBDD('ContracteEspectacles');
+      this.ContracteEspectacles.push(CECF);
+    });
+  }
 }

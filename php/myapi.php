@@ -17,6 +17,7 @@ class MyAPI extends API
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->LOCAL_URL = "../src/assets/docs/";
         
+        
     }
 
     protected function getNew() {
@@ -59,70 +60,55 @@ class MyAPI extends API
         else return array(array('List'=>$RET, 'c'=>$c['c']), 200);
     }
     
+    protected function getMes($m) {
+        switch($m) {
+            case 1: return 'de gener'; break;
+            case 2: return 'de febrer'; break;
+            case 3: return 'de març'; break;
+            case 4: return 'd\'abril'; break;
+            case 5: return 'de maig'; break;
+            case 6: return 'de juny'; break;
+            case 7: return 'de juliol'; break;
+            case 8: return 'd\'agost'; break;
+            case 9: return 'de setembre'; break;
+            case 10: return 'd\'octubre'; break;
+            case 11: return 'de novembre'; break;
+            case 12: return 'de desembre'; break;
+        }
+    }
+    
     protected function GenWord(){
         
-        $phpWord = new \PhpOffice\PhpWord\PhpWord();        
-        /* Note: any element you append to a document must reside inside of a Section. */
+        $C = $this->request['ContracteControl'];
         
-        // Adding an empty Section to the document...
-        $section = $phpWord->addSection();
-        // Adding Text element to the Section having font styled by default...
-        $section->addText(
-            '"Learn from yesterday, live for today, hope for tomorrow. '
-            . 'The important thing is not to stop questioning." '
-            . '(Albert Einstein)'
-            );
+        \PhpOffice\PhpWord\Settings::setTempDir($this->LOCAL_URL.'tmp/');
+                                      
+        $Select = "Select * from contractes where ctc_idContracte = 12";
+        $Rows = $this->runQuery($Select, array(), false, true);        
+                                      
+        $CE = array();        
+        $Companyies = array();
+        foreach($Rows as $K => $Row) { 
+            $Companyies[$Row['c_idCompanyia']] = $Row['c_Nom'];
+            $CE[$Row['cte_idContracteEspectacle']] = array('CFL' => array(), 'Row' => $Row); 
+            $CF[$Row['cte_idContracteEspectacle']]['CFL'][$Row['ctf_idFuncio']] = $Row; 
+        }
         
-        /*
-         * Note: it's possible to customize font style of the Text element you add in three ways:
-         * - inline;
-         * - using named font style (new font style object will be implicitly created);
-         * - using explicitly created font style object.
-         */
+        $phpword = new \PhpOffice\PhpWord\PhpWord();
+        $T = $phpword->loadTemplate( $this->LOCAL_URL.'ModelsDocuments/Contracte2.docx');
+        var_dump($T);        
         
-        // Adding Text element with font customized inline...
-        $section->addText(
-            '"Great achievement is usually born of great sacrifice, '
-            . 'and is never the result of selfishness." '
-            . '(Napoleon Hill)',
-            array('name' => 'Tahoma', 'size' => 10)
-            );
+        $D = getdate();
         
-        // Adding Text element with font customized using named font style...
-        $fontStyleName = 'oneUserDefinedStyle';
-        $phpWord->addFontStyle(
-            $fontStyleName,
-            array('name' => 'Tahoma', 'size' => 10, 'color' => '1B2232', 'bold' => true)
-            );
-        $section->addText(
-            '"The greatest accomplishment is not in never falling, '
-            . 'but in rising again after you fall." '
-            . '(Vince Lombardi)',
-            $fontStyleName
-            );
+        $T->setValue('DataDocument', htmlspecialchars("Girona, a ".$D['mday']." ".$this->getMes($D['mon'])." de ".$D['year']));        
+        $T->setValue('LlistatCompanyies', implode(', ', $Companyies));
+        $T->setValue('NomEntitat', htmlspecialchars($Rows[0]["e_Nom"]));
+        $T->setValue('AdrecaEntitat', htmlspecialchars($Rows[0]["e_Adreca"]. ", ".$Rows[0]["e_CodiPostal"]." ".$Rows[0]["e_Ciutat"]));
+        $T->setValue('CifEntitat', htmlspecialchars($Rows[0]["e_CIF"]));                      
         
-        // Adding Text element with font customized using explicitly created font style object...
-        $fontStyle = new \PhpOffice\PhpWord\Style\Font();
-        $fontStyle->setBold(true);
-        $fontStyle->setName('Tahoma');
-        $fontStyle->setSize(13);
-        $myTextElement = $section->addText('"Believe you can and you\'re halfway there." (Theodor Roosevelt)');
-        $myTextElement->setFontStyle($fontStyle);
+        $T->saveAs($this->LOCAL_URL.'tmp/Doc.docx');
         
-        // Saving the document as OOXML file...
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-        $objWriter->save('helloWorld.docx');
-        
-        // Saving the document as ODF file...
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'ODText');
-        $objWriter->save('helloWorld.odt');
-        
-        // Saving the document as HTML file...
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
-        $objWriter->save('helloWorld.html');
-        
-        /* Note: we skip RTF, because it's not XML-based and requires a different example. */
-        /* Note: we skip PDF, because "HTML-to-PDF" approach is used to create PDF documents. */
+        return true;
     }
     
      
@@ -249,7 +235,7 @@ class MyAPI extends API
              $Dades['DadesContacte'] = $this->runQuery("Select * from ext_dades_contacte WHERE dc_idExtern = ? AND dc_Taula = 'u'", $Params);
              $Dades['Files'] = array('base' => '', 'files' => array() );
                           
-             //Carrego els arxius que té l'usuari
+             //Carrego els arxius que tÃ© l'usuari
              $users_folder = $this->LOCAL_URL . $idU . '/';             
              
              if (!file_exists($users_folder)) { mkdir($users_folder, 0777, true); }             
@@ -289,7 +275,7 @@ class MyAPI extends API
             }                
             foreach($V['Multiples'] as $M) {
                 //cm_idExtern 0, cm_Camp 1, cm_idForeignKey 2, cm_Taula 3, cm_Text 4, cm_isText 5
-                /* Si el camp extra té l'acció d'esborrar-lo, no ha d'aparèixer */
+                /* Si el camp extra tÃ© l'acciÃ³ d'esborrar-lo, no ha d'aparÃ¨ixer */
                 if ($M['tmp_action'] != 'D') {
                     $PO[$M['Fields'][1]['Valor']][] = $M['Fields'][2]['Valor'];
                 }
@@ -351,7 +337,7 @@ class MyAPI extends API
         if($Q != '%%' && $Q != '') { $W .= " AND u.u_Nom like ? OR u.u_Cognoms like ? "; $Params[] = $Q; $Params[] = $Q; }
         if($OnlySelected == '1') { $W .= " AND ou.ou_fk_idOferta = ? AND ou.ou_Informat = 1 "; $Params[] = $PO['o_idOferta']; }
                        
-        /* Hauríem de recalcular amb el que tenim aquí */
+        /* HaurÃ­em de recalcular amb el que tenim aquÃ­ */
         if(isset($CampsObligats['o_NivellFormatiu'])) { 
             $W .= " AND u.u_idUsuari in (Select u.u_idUsuari as usuari from usuariestudis ue WHERE ue.ue_Ext_NivellEstudi > ?) "; $Params[] = $PO['o_NivellFormatiu']; 
         }
@@ -426,7 +412,7 @@ class MyAPI extends API
         if(isset($CampsObligats['o_MinusvaliaPercentatge']) ) {
             // de 33 a 64
             if ($PO['o_MinusvaliaPercentatge'] == 33 ) { $W .= " AND u.u_MinusvaliaPercentatge <= 64 && u.u_MinusvaliaPercentatge >= 33 "; }
-            // Més de 65
+            // MÃ©s de 65
             else if($PO['o_MinusvaliaPercentatge'] == 65) { $W .= " AND u.u_MinusvaliaPercentatge > 64 "; }                     
         }        
         
@@ -556,7 +542,7 @@ class MyAPI extends API
          
      }
  
-     /* Funció que calcula les ponderacions i és cridada des de getUsuari quan entra una oferta */
+     /* FunciÃ³ que calcula les ponderacions i Ã©s cridada des de getUsuari quan entra una oferta */
      protected function calcPonderacionsOfertes($OfertesFields) {
         
         $F = $OfertesFields;                
@@ -778,7 +764,7 @@ class MyAPI extends API
          $tmp_name = $Arxiu["tmp_name"];
                            
          $name = $TipusArxiu . '_' . $TipusArxiuNom .'_' . $Arxiu['name'];
-         // Primer mirem si el directori existeix, sinó el creem
+         // Primer mirem si el directori existeix, sinÃ³ el creem
          
          $base_dir = $this->LOCAL_URL . $idU;
          if (!file_exists($base_dir)) mkdir($base_dir);
