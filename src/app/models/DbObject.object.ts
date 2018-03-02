@@ -24,6 +24,14 @@ export class DbObject {
     return this.http.get<{Max: number}>( this.base + '/getNew', { params: P }  );
   }
 
+  public getOneTableRow<T>($Taula, $Camp, $Id): Observable<T> {
+    let P = new HttpParams();
+    P = P.append('taula', $Taula);
+    P = P.set('camp', $Camp);
+    P = P.set('id', $Id);
+    return this.http.post<T>( this.base + '/getDadesTaulaById', P );
+  }
+  
   public getAllTableRows<T>($Taula, P: HttpParams): Observable<T> {
     P = P.append('taula', $Taula);
     return this.http.post<T>( this.base + '/getDadesTaulaAll', P );

@@ -3,21 +3,23 @@
 <div class="row">
 	<mat-card class="col-4">
 		<mat-card-header>
-			<mat-card-title> Companyies <span class="link" (click)="showCompanyia(null)">(+ companyia)</span>
-			<div>
-				<mat-form-field>
-			    		<input matInput placeholder="Filter" name="S1" (ngModelChange)="FilterCompanyies($event)" [ngModel] = "CompanyiesSearch">
-			  	</mat-form-field>
-			 </div>
-			</mat-card-title>
-			
+			<mat-card-title> 
+				Companyies
+				<div>
+					<mat-form-field>
+				    		<input matInput placeholder="Filter" name="S1" (ngModelChange)="FilterCompanyies($event)" [ngModel] = "CompanyiesSearch">
+				  	</mat-form-field>
+				 </div>
+			 </mat-card-title>
+						
 		</mat-card-header>
 		<mat-card-content>		
-		  <table class="table">		  	 		  	
+		  <table class="table">
+		  	<tr><th>Companyies <span class="link" (click)="showCompanyia(null)">(+ companyia)</span></th></tr>		  	 		  	
 		  	<tr *ngFor="let Row of CompanyiesEspectaclesPreus.Companyies.RowList"
 		  	>
 		  		<td>
-		  			<div (click)="showCompanyia( Row )">
+		  			<div (click)="showCompanyia( Row )" class="linkhand">
 		  			<span>{{Row.Fields.c_Nom}}</span>
 			  			<div style="font-size:10px; margin-left:5px;">
 			  				{{Row.Fields.c_Responsable}} _ 
@@ -25,7 +27,7 @@
 			  				{{Row.Fields.c_Email}}</div>
 			  		</div>
 			  		<span class="link" (click)="showEspectacle(null, Row.Fields.c_idCompanyia)">(+ espectacle)</span>
-			  		<span class="link" (click)="getEspectacles(Row.Fields.c_idCompanyia)">(+ veure espectacles)</span>
+			  		<span class="link" (click)="getEspectacles(Row.Fields.c_idCompanyia)">(veure espectacles)</span>
 		  		</td>		  		
 		  		
 		  	</tr>
@@ -36,45 +38,49 @@
 	
 	<mat-card class="col-8">
 		<mat-card-header>
-			<mat-card-title> Espectacles </mat-card-title>
-			<mat-form-field>
-		    		<input matInput placeholder="Filter" name="S2" (ngModelChange)="FilterEspectacles($event)" [ngModel] = "CompanyiesSearch">
-		  	</mat-form-field>
-		  	<mat-form-field>
-		    		<input matInput placeholder="Import min" name="S3" (ngModelChange)="FilterPreuMin($event)" [ngModel] = "CompanyiesSearch">
-		  	</mat-form-field>
-		  	<mat-form-field>
-		    		<input matInput placeholder="Import max" name="S4" (ngModelChange)="FilterPreuMax($event)" [ngModel] = "CompanyiesSearch">
-		  	</mat-form-field>
+			<mat-card-title> Espectacles
+				<div>
+					<mat-form-field>
+				    		<input matInput placeholder="Filter" name="S2" (ngModelChange)="FilterEspectacles($event)" [ngModel] = "CompanyiesSearch">
+				  	</mat-form-field>
+				  	<mat-form-field>
+				    		<input matInput placeholder="Import min" name="S3" (ngModelChange)="FilterPreuMin($event)" [ngModel] = "CompanyiesSearch">
+				  	</mat-form-field>
+				  	<mat-form-field>
+				    		<input matInput placeholder="Import max" name="S4" (ngModelChange)="FilterPreuMax($event)" [ngModel] = "CompanyiesSearch">
+				  	</mat-form-field>
+			  	</div>
+			</mat-card-title>
 		</mat-card-header>
 		<mat-card-content>		
 		  <table class="table">		  	 
 		  	<tr>		  		
-		  		<td>Espectacle</td>
-		  		<td>Preus</td>		  			
+		  		<th>Espectacle</th>
+		  		<th>Preus</th>		  			
 		  	</tr>
 		  	<tr *ngFor="let Row of CompanyiesEspectaclesPreus.Espectacles.RowList"
 		  	>
-		  		<td (click)="showEspectacle( Row )">
-		  			<span>{{Row.Fields.ep_Nom}}</span>
+		  		<td (click)="showEspectacle( Row )" class="linkhand">
+		  			<span>{{Row.Fields.ep_Nom}}</span>&nbsp; <span class="link" (click)="showPreu(null, Row.Fields.ep_idEspectacle)">+ preu</span>
 			  			<div style="font-size:10px; margin-left:5px;">
 			  				{{Row.Fields.ep_Requeriments}} _ 
 			  				{{Row.Fields.ep_Tecnic}} _ 
-			  				{{Row.Fields.ep_TipusEspectacle}}</div>
+			  				{{Row.Fields.ep_TipusEspectacle}}
+			  			</div>
 		  		</td>	
 		  		<td>
-		  			<div *ngFor="let P of CompanyiesEspectaclesPreus.getPreusFromEspectacle( Row.Fields.ep_idEspectacle )">
-		  					{{ P.Fields.p_PreuAC }} _ {{ P.Fields.p_PreuSC }} _ {{ P.Fields.p_Text }} 
+		  			<div 
+		  				*ngFor="let P of CompanyiesEspectaclesPreus.getPreusFromEspectacle( Row.Fields.ep_idEspectacle )"
+		  				class="linkhand"
+		  				(click)="showPreu(P, Row.Fields.ep_idEspectacle)"
+		  			>		  			
+		  					{{ P.Fields.p_PreuAC }} _ {{ P.Fields.p_PreuSC }} _ {{ P.Fields.p_Text }} 		  					
 		  					<span *ngIf="CercaFromContracte" class="link" (click)="addToContract(P, Row)">(Afegir a contracte)</span>
 		  			</div>
-		  			
-		  			<span class="link" (click)="showPreu(null, Row.Fields.ep_idEspectacle)">+ preu</span>
-		  			
+		  					  			
 		  		</td>	  		
 		  	</tr>
 		  </table>
-		
-		  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 	
 		</mat-card-content>
 	</mat-card>

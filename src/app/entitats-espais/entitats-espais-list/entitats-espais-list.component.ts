@@ -16,7 +16,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 })
 export class EntitatsEspaisListComponent implements OnInit {
 
-  @Input() CercaFromContracte = true;
+  @Input() CercaFromContracte = false;
   @Output() EntitatEspaiForContracte = new EventEmitter<EntitatEspaiOneObject>();
 
   Search: any;
@@ -33,7 +33,7 @@ export class EntitatsEspaisListComponent implements OnInit {
   reload( X?: HttpParams ) {
     let H = (X) ? X : new HttpParams();
     this._db.getAllTableRows<any>('EntitatsEspais', H )
-      .subscribe( Y => { this.EntitatsEspais = new EntitatsEspaisObject(Y); });
+      .subscribe( Y => { this.EntitatsEspais = new EntitatsEspaisObject(Y); console.log(this.EntitatsEspais)});
   }
 
   FilterEspaisEntitats($text: string) {
@@ -51,7 +51,7 @@ export class EntitatsEspaisListComponent implements OnInit {
 
   showEspai(Row: EspaiRow, idEntitat: NumberType) {
     let E = Row;
-    if (!Row) { E = new EspaiRow(); E.getNew(idEntitat); } else { E.tmp_action = 'U'; }
+    if (!Row) { E = new EspaiRow(); E.getNew(idEntitat.Val); } else { E.tmp_action = 'U'; }
     let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Espais'] }).afterClosed()
       .subscribe( (R: EspaiRow ) => { this.reload(); });
   }

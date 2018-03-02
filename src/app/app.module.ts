@@ -11,7 +11,6 @@ import { GlobalVarsService } from './helpers/global-vars.service';
 import { NotificationService } from './helpers/notification.service';
 import { Routes, RouterModule } from '@angular/router';
 import { CompanyiesEspectaclesListComponent } from './companyies-espectacles/companyies-espectacles-list/companyies-espectacles-list.component';
-import { CompanyiesEspectaclesFormComponent } from './companyies-espectacles/companyies-espectacles-form/companyies-espectacles-form.component';
 import { FormEditComponent } from './form-helper/form-edit/form-edit.component';
 import { FormHelperModule } from './form-helper/form-helper.module';
 import { DbObject } from './models/DbObject.object';
@@ -29,7 +28,6 @@ import { EntitatsEspaisListComponent } from './entitats-espais/entitats-espais-l
 import { ContractesListComponent } from './contractes/contractes-list/contractes-list.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ContractesMainComponent } from './contractes/contractes-main/contractes-main.component';
-import { ContractesFuncionsComponent } from './contractes/contractes-funcions/contractes-funcions.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
@@ -50,11 +48,9 @@ const appRoutes: Routes = [
     ContactesListComponent,
     ContactesFormComponent,
     CompanyiesEspectaclesListComponent,
-    CompanyiesEspectaclesFormComponent,
     EntitatsEspaisListComponent,
     ContractesListComponent,
-    ContractesMainComponent,
-    ContractesFuncionsComponent
+    ContractesMainComponent
   ],
   imports: [
     BrowserModule,

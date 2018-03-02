@@ -6,7 +6,7 @@ export class EntitatEspaiOneObject {
 
   Entitat = new EntitatRow();
   Espai = new EspaiRow();
-  
+ 
 }
 
 export class EntitatsEspaisObject {
@@ -30,7 +30,8 @@ export class EntitatsEspaisObject {
     }
   }
 
-  getEntitatById(valor: NumberType): EntitatRow { let T = this.Entitats.getById('e_idAjuntament', valor.Val); return (T) ? T : new EntitatRow(); }  
+  getEntitatById(valor: NumberType): EntitatRow { let T = this.Entitats.getById('e_idAjuntament', valor.Val); return (T) ? T : new EntitatRow(); }
+  getEspais(valor: NumberType): EspaiRow[] { let T = this.Espais.getByFk('es_idAjuntament', valor.Val); return T; }
 
 }
 

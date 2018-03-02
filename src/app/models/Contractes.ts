@@ -33,7 +33,7 @@ export class ContractesObject {
         this.ContractesEspectacles.addModelNoRepeat( E , 'cte_idContracteEspectacle');
 
         let P = new ContracteFuncioRow(); P.fromBDD(X, [], true);
-        this.ContractesFuncions.addModel( P );
+        this.ContractesFuncions.addModelNoRepeat( P, 'ctf_idFuncio' );
 
         let PR = new ProjecteRow(); PR.fromBDD(X, [], true);
         this.Projectes.addModelNoRepeat(PR, 'pr_idProjecte');

@@ -20,6 +20,11 @@ export class EspaiFields {
 
 export class EspaiRow extends TableRow<EspaiFields> {
   constructor() { super(EspaiFields); }
+
+  getNew(idEntitat: number) {
+    this.tmp_action = 'A';
+    this.Fields.es_idAjuntament.Val = idEntitat;
+  }
 }
 export class EspaiSearchList extends TableSearchList<EspaiRow, EspaiFields> {
   constructor(J: any) { super(EspaiRow, J); }

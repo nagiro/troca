@@ -8,27 +8,30 @@
 		    		<input matInput placeholder="Filter" name="S2" (ngModelChange)="FilterEspaisEntitats($event)" [ngModel] = "Search">
 		  	</mat-form-field>
 		</mat-card-header>
-		<mat-card-content>		
+		<mat-card-content>				
 		  <table class="table">		  	 
 		  	<tr>		  		
-		  		<td>Entitat <span (click)="showEntitat(null)">(+ entitat)</span></td>
-		  		<td>Espai</td>		  		
+		  		<th>Entitats <span class="link" (click)="showEntitat(null)">+ entitat</span></th>
+		  		<th>Espais</th>		  		
 		  	</tr>
-		  	<tr *ngFor="let Row of EntitatsEspais.Espais.RowList"
+		  	<tr *ngFor="let Row of EntitatsEspais.Entitats.RowList"
 		  	>
-		  		<td (click)="showEspai( Row )">
-		  			<span>{{Row.Fields.es_Nom}}</span>
-			  			<div style="font-size:10px; margin-left:5px;"></div>
-		  		</td>	
 		  		<td>
-		  			<span  (click)="showEntitat( EntitatsEspais.getEntitatById( Row.Fields.es_idAjuntament ) )">{{EntitatsEspais.getEntitatById( Row.Fields.es_idAjuntament ).Fields.e_Nom.Val}}</span>
-		  			<span *ngIf="CercaFromContracte" class="link" (click)="addToContract(Row)">(Afegir a contracte)</span>
-		  			<span class="link" (click)="showEspai(null, Row.Fields.es_idAjuntament)">+ espai</span>
-		  		</td>	  		
+		  			<span class="linkhand" (click)="showEntitat( Row )">{{Row.Fields.e_Nom.Val}}</span>
+		  			<span class="link" (click)="showEspai(null, Row.Fields.e_idAjuntament)">+ espai</span>
+		  		</td>
+		  		<td>		  		 		
+			  		<div 
+			  			*ngFor="let E of EntitatsEspais.getEspais( Row.Fields.e_idAjuntament )" 
+			  			(click)="showEspai(E, Row.Fields.e_idAjuntament)"
+			  			class="linkhand"
+			  		>
+			  			{{E.Fields.es_Nom}}			  						  			
+			  			<span *ngIf="CercaFromContracte" class="link" (click)="addToContract(E)">(Afegir a contracte)</span>		  				
+			  		</div>	
+			  	</td>		  			  		
 		  	</tr>
 		  </table>
-		
-		  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 	
 		</mat-card-content>
 	</mat-card>

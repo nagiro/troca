@@ -44,7 +44,7 @@ export class FormEditComponent<T> implements OnInit {
     else { this.R.tmp_action = 'D'; }
     let BDD = new ToBDDObject();
     BDD.addRowUpdate( this.R.toBDD(this.NomTaula) );
-    this._db.doSave( BDD );
+    this._db.doSave( BDD ).subscribe(X => console.log(X));
     this.dialogRef.close(this.P);
   }
 

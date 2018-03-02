@@ -8,6 +8,7 @@
 
 # dependencies
 /node_modules
+/php/vendor
 
 # IDEs and editors
 /.idea

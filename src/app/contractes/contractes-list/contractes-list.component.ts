@@ -10,7 +10,7 @@ import { EntitatsEspaisObject } from '../../models/EntitatsEspais';
 import { ProjectesSearchList, ProjecteRow } from '../../models/Projectes';
 import { CompanyiaFields } from '../../models/companyies';
 import { HttpParams } from '@angular/common/http';
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -22,6 +22,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class ContractesListComponent implements OnInit {
 
   @Output() whenNewContracte = new EventEmitter<number>();
+  @Output() whenNewEspectacle = new EventEmitter<ContracteControlRow>();
+  @Output() whenNewFuncio = new EventEmitter<[ContracteControlRow, ContracteEspectacleRow]>();
+  @Input() set whenReload(X: number) { this.reload(); }
+
   Contractes = new ContractesObject();
   Projectes = new ProjectesSearchList();
   Params = new HttpParams();
@@ -52,7 +56,7 @@ export class ContractesListComponent implements OnInit {
     let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Projectes'] }).afterClosed()
       .subscribe( (R: ProjecteRow) => { this.reload(); });
   }
-  
+
   editControl(Row: ContracteControlRow) {
     let E = Row;
     if (Row) { E.tmp_action = 'U';
@@ -60,7 +64,15 @@ export class ContractesListComponent implements OnInit {
         .subscribe( (R: ContracteControlRow) => { this.reload(); });
     }
   }
-  
+
+  addEspectacle( CC: ContracteControlRow ) {
+    this.whenNewEspectacle.emit(CC);
+  }
+
+  addFuncio(CC: ContracteControlRow, CE: ContracteEspectacleRow) {
+    this.whenNewFuncio.emit([CC, CE]);
+  }
+
   editEspectacle(Row: ContracteEspectacleRow) {
     let E = Row;
     if (Row) { E.tmp_action = 'U';
@@ -68,7 +80,7 @@ export class ContractesListComponent implements OnInit {
         .subscribe( (R: ContracteEspectacleRow) => { this.reload(); });
     }
   }
-  
+
   editFuncio(Row: ContracteFuncioRow) {
     let E = Row;
     if (Row) { E.tmp_action = 'U';
@@ -81,6 +93,10 @@ export class ContractesListComponent implements OnInit {
   FilterContracteControl($event: string) {
     let T = this.HttpCEP.value.set('filter1', '1 = 1');
     this.HttpCEP.next(T);
+  }
+  
+  genDoc(idContracteControl: number) {
+    
   }
   
 }
