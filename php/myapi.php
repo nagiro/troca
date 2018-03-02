@@ -1,7 +1,7 @@
 <?php 
 require_once 'api.php';
 require_once 'const.php';
-require_once './PHPWord-0.14.0/bootstrap.php';
+require_once './vendor/autoload.php';
 
 
 class MyAPI extends API
@@ -60,6 +60,7 @@ class MyAPI extends API
     }
     
     protected function GenWord(){
+        
         $phpWord = new \PhpOffice\PhpWord\PhpWord();        
         /* Note: any element you append to a document must reside inside of a Section. */
         
