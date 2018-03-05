@@ -95,8 +95,7 @@ class MyAPI extends API
         }
         
         $phpword = new \PhpOffice\PhpWord\PhpWord();
-        $T = $phpword->loadTemplate( $this->LOCAL_URL.'ModelsDocuments/Contracte2.docx');
-        var_dump($T);        
+        $T = $phpword->loadTemplate( $this->LOCAL_URL.'ModelsDocuments/Contracte2.docx');        
         
         $D = getdate();
         
@@ -104,14 +103,134 @@ class MyAPI extends API
         $T->setValue('LlistatCompanyies', implode(', ', $Companyies));
         $T->setValue('NomEntitat', htmlspecialchars($Rows[0]["e_Nom"]));
         $T->setValue('AdrecaEntitat', htmlspecialchars($Rows[0]["e_Adreca"]. ", ".$Rows[0]["e_CodiPostal"]." ".$Rows[0]["e_Ciutat"]));
-        $T->setValue('CifEntitat', htmlspecialchars($Rows[0]["e_CIF"]));                      
+        $T->setValue('CifEntitat', htmlspecialchars($Rows[0]["e_CIF"]));
+        
+        $dom = new DOMDocument();
+        $dom->loadXML($T->tempDocumentMainPart);        
+        $x = new DOMXPath($dom);
+        $elements = $x->query('/w:document/w:body/w:p');
+        $i = 0; $f = 0;
+        $RET = $dom->createElement('conyos');
+        foreach($dom->childNodes as $document) { 
+            foreach($document->childNodes as $body) {                
+                foreach($body->childNodes as $k => $p ) {                    
+                    if ($p->nodeValue === '${BLOC1}') $i = $k;                    
+                    if ($p->nodeValue === '${/BLOC1}') $f = $k;
+                    if ($i > 0 && $f == 0) { $RET->appendChild($p); }
+                    
+                }
+            }
+        }
+        
+        var_dump($RET->childNodes); die;
+        
+        foreach($dom->childNodes as $document) {
+            foreach($document->childNodes as $body) {
+                foreach($body->childNodes as $k=>$p) {
+                    if ($p->nodeValue === '${BLOC1}') $i = $k;
+                    if ($p->nodeValue === '${/BLOC1}') $f = $k;
+                    if ($i > 0 && $f == 0) { $RET[] = $p; }
+                    
+                }
+            }
+        }
+        
+        
+        // print $item->nodeName . " = ". $item->nodeValue ."<br>";
+        die;
+                
+        $BlocXmlCC = $this->getBlock('BLOC1', $XML);
+        $BlocXmlCF = $this->getBlock('BLOC2', $XML);
+        $BCCT = "";
+        foreach($Companyies as $CC) {
+            $BCC = $BlocXmlCC;            
+            $BCC = str_replace("${NomCompanyia}", $CC['Row']['c_Nom'], $BCC);
+            $BCC = str_replace("${NomEspectacle}", $CC['Row']['ep_Nom'], $BCC);
+            $BCC = str_replace("${NomEspai}", $CC['Row']['es_Nom'], $BCC);
+            $BCC = str_replace("${NomPoblacioEspai}", $CC['Row']['es_Poblacio'], $BCC);
+            $BCFT = "";
+            foreach($CC['CFL'] as $CF) {
+                $BCF = $BlocXmlCF;
+                $BCF = str_replace("${DataFuncio}", $CF['ctf_Data'], $BCF);
+                $BCF = str_replace("${NomCompanyia}", $CF['c_Nom'], $BCF);
+                $BCFT .= $BCF;
+            }
+            $this->replaceBlock("BLOC2", $BCFT, $BCC);
+            $BCCT .= $BCC;
+        }
+        $T->replaceBlock("BLOC1", $BCCT);
+        
+        var_dump($T); die;        
         
         $T->saveAs($this->LOCAL_URL.'tmp/Doc.docx');
         
         return true;
     }
     
-     
+    function getArray($node)
+    {
+        $array = false;
+        
+        if ($node->hasAttributes())
+        {
+            foreach ($node->attributes as $attr)
+            {
+                $array[$attr->nodeName] = $attr->nodeValue;
+            }
+        }
+        
+        if ($node->hasChildNodes())
+        {
+            if ($node->childNodes->length == 1)
+            {
+                $array[$node->firstChild->nodeName] = $node->firstChild->nodeValue;
+            }
+            else
+            {
+                foreach ($node->childNodes as $childNode)
+                {
+                    if ($childNode->nodeType != XML_TEXT_NODE)
+                    {
+                        $array[$childNode->nodeName][] = $this->getArray($childNode);
+                    }
+                }
+            }
+        }
+        
+        return $array;
+    } 
+    
+
+    public function getBlock($blockname, $xml)
+    {
+        $xmlBlock = null;
+        preg_match(
+            '/(<w:p.*>\${' . $blockname . '}<\/w:.*?p>)(.*)(<w:p.*\${\/' . $blockname . '}<\/w:.*?p>)/is',
+            $xml,
+            $matches
+            );
+        return $matches;
+    }
+    
+    public function replaceBlock($blockname, $replacement, $XML)
+    {
+        preg_match(
+            '/(<w:p.*>\${' . $blockname . '}<\/w:.*?p>)(.*)(<w:p.*\${\/' . $blockname . '}<\/w:.*?p>)/is',
+            $XML,
+            $matches
+            );
+        
+        if (isset($matches[3])) {
+            return str_replace(
+                $matches[2] . $matches[3] . $matches[4],
+                $replacement,
+                $XML
+                );
+        }
+    }
+    
+    
+    
      ###########################################################
      # USUARIS 
      ###########################################################
