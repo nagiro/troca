@@ -1,7 +1,7 @@
 <?php 
 
 require_once('myapi.php');
-error_reporting( E_ERROR );
+error_reporting( E_ALL );
 ini_set('display_errors', 1);
 
 // Requests from the same server don't have a HTTP_ORIGIN header
@@ -15,7 +15,8 @@ try {
     echo $API->processAPI();
     
 } catch (Exception $e) {
-    echo json_encode(Array('error' => $e->getMessage()));
+    // echo json_encode(Array('error' => $e->getMessage()));
+    var_dump($e);
 }
 
 ?>

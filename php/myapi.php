@@ -91,114 +91,180 @@ class MyAPI extends API
         foreach($Rows as $K => $Row) { 
             $Companyies[$Row['c_idCompanyia']] = $Row['c_Nom'];
             $CE[$Row['cte_idContracteEspectacle']] = array('CFL' => array(), 'Row' => $Row); 
-            $CF[$Row['cte_idContracteEspectacle']]['CFL'][$Row['ctf_idFuncio']] = $Row; 
+            $CE[$Row['cte_idContracteEspectacle']]['CFL'][$Row['ctf_idFuncio']] = $Row; 
         }
         
         $phpword = new \PhpOffice\PhpWord\PhpWord();
         $T = $phpword->loadTemplate( $this->LOCAL_URL.'ModelsDocuments/Contracte2.docx');        
         
         $D = getdate();
-        
+                       
         $T->setValue('DataDocument', htmlspecialchars("Girona, a ".$D['mday']." ".$this->getMes($D['mon'])." de ".$D['year']));        
         $T->setValue('LlistatCompanyies', implode(', ', $Companyies));
         $T->setValue('NomEntitat', htmlspecialchars($Rows[0]["e_Nom"]));
         $T->setValue('AdrecaEntitat', htmlspecialchars($Rows[0]["e_Adreca"]. ", ".$Rows[0]["e_CodiPostal"]." ".$Rows[0]["e_Ciutat"]));
         $T->setValue('CifEntitat', htmlspecialchars($Rows[0]["e_CIF"]));
-        
-        $dom = new DOMDocument();
-        $dom->loadXML($T->tempDocumentMainPart);        
-        $x = new DOMXPath($dom);
-        $elements = $x->query('/w:document/w:body/w:p');
-        $i = 0; $f = 0;
-        $RET = $dom->createElement('conyos');
-        foreach($dom->childNodes as $document) { 
-            foreach($document->childNodes as $body) {                
-                foreach($body->childNodes as $k => $p ) {                    
-                    if ($p->nodeValue === '${BLOC1}') $i = $k;                    
-                    if ($p->nodeValue === '${/BLOC1}') $f = $k;
-                    if ($i > 0 && $f == 0) { $RET->appendChild($p); }
-                    
-                }
-            }
-        }
-        
-        var_dump($RET->childNodes); die;
-        
-        foreach($dom->childNodes as $document) {
-            foreach($document->childNodes as $body) {
-                foreach($body->childNodes as $k=>$p) {
-                    if ($p->nodeValue === '${BLOC1}') $i = $k;
-                    if ($p->nodeValue === '${/BLOC1}') $f = $k;
-                    if ($i > 0 && $f == 0) { $RET[] = $p; }
-                    
-                }
-            }
-        }
-        
-        
-        // print $item->nodeName . " = ". $item->nodeValue ."<br>";
-        die;
                 
-        $BlocXmlCC = $this->getBlock('BLOC1', $XML);
-        $BlocXmlCF = $this->getBlock('BLOC2', $XML);
-        $BCCT = "";
-        foreach($Companyies as $CC) {
-            $BCC = $BlocXmlCC;            
-            $BCC = str_replace("${NomCompanyia}", $CC['Row']['c_Nom'], $BCC);
-            $BCC = str_replace("${NomEspectacle}", $CC['Row']['ep_Nom'], $BCC);
-            $BCC = str_replace("${NomEspai}", $CC['Row']['es_Nom'], $BCC);
-            $BCC = str_replace("${NomPoblacioEspai}", $CC['Row']['es_Poblacio'], $BCC);
-            $BCFT = "";
-            foreach($CC['CFL'] as $CF) {
-                $BCF = $BlocXmlCF;
-                $BCF = str_replace("${DataFuncio}", $CF['ctf_Data'], $BCF);
-                $BCF = str_replace("${NomCompanyia}", $CF['c_Nom'], $BCF);
-                $BCFT .= $BCF;
+        /* GENERO EL BLOC 1, DETALL D'INFORMACIÓ */
+        
+        $phpWordHandle = new \PhpOffice\PhpWord\PhpWord();
+        $section = $phpWordHandle->addSection();
+        
+        foreach($CE as $idC => $OCF) {
+            $section->addText($OCF['Row']['c_Nom']);
+            $section->addListItem($OCF['Row']['ep_Nom'], 1);
+            $section->addListItem($OCF['Row']['es_Nom'], 1);
+            $section->addListItem($OCF['Row']['es_Poblacio'], 1);
+            foreach($OCF['CFL'] as $idF => $CF) {                
+                $section->addListItem('Hores:', 1);
+                $section->addListItem('Dia '.$CF['ctf_Data']. ' a les '.$CF['ctf_Hora_inici'], 2);                  
             }
-            $this->replaceBlock("BLOC2", $BCFT, $BCC);
-            $BCCT .= $BCC;
         }
-        $T->replaceBlock("BLOC1", $BCCT);
         
-        var_dump($T); die;        
+        $objWriter =  \PhpOffice\PhpWord\IOFactory::createWriter($phpWordHandle);
+        $fullXML = $objWriter->getWriterPart('Document')->write();        
+        $T->replaceBlock('BLOC1', $this->getBodyBlock($fullXML));
+                                        
+        /* Fi bloc 1*/
         
+        /* Inici Bloc 2 Dades econòmiques */
+        
+        $phpWordHandle = new \PhpOffice\PhpWord\PhpWord();
+        $section = $phpWordHandle->addSection();        
+        $table = $section->addTable();
+        $table->addRow();
+        $table->addCell()->addText('Nom espectacle');
+        $table->addCell()->addText('BAse');
+        $table->addCell()->addText('IVA');
+        $table->addCell()->addText('Total');        
+
+        foreach($CE as $idC => $OCF) {
+            $table->addRow();
+            $table->addCell()->addText($OCF['Row']['c_Nom']);            
+            foreach($OCF['CFL'] as $idF => $CF) {
+                $table->addCell()->addText($CF['cte_PreuAC']);
+                $table->addCell()->addText($CF['cte_IVAAC']);
+                $table->addCell()->addText($CF['cte_TotalAC']);                                        
+            }
+        }
+        
+        $objWriter =  \PhpOffice\PhpWord\IOFactory::createWriter($phpWordHandle);
+        $fullXML = $objWriter->getWriterPart('Document')->write();
+        $T->replaceBlock('BLOC2', $this->getBodyBlock($fullXML));
+                
+        /* FI BLOC 2 */
+                
         $T->saveAs($this->LOCAL_URL.'tmp/Doc.docx');
         
         return true;
     }
+        
+
+    protected function getBodyBlock($string){
+        if (preg_match('%(?i)(?<=<w:body>)[\s|\S]*?(?=</w:body>)%', $string, $regs)) {
+            return $regs[0];
+        } else {
+            return '';
+        }
+    }
     
-    function getArray($node)
-    {
-        $array = false;
+    function replaceBlocSimple($inici, $fi, $xmlO, $xmlRArray) {
+                
+        foreach($xmlRArray as $k => $xml) {                 
+            $T = str_replace('<?xml version="1.0"?>', '', $xml);
+			$T = str_replace('<root>', '', $T); 
+			$T = str_replace('</root>', '', $T);
+			$xmlRArray[$k] = $T;
+        }               
+         
+        $xmlR = '<root>'.implode(' ', $xmlRArray).'</root>';        
         
-        if ($node->hasAttributes())
-        {
-            foreach ($node->attributes as $attr)
-            {
-                $array[$attr->nodeName] = $attr->nodeValue;
-            }
-        }
+        $X = new DOMDocument('1.0', 'UTF-8');
+        $X->loadXML($xmlO);        
         
-        if ($node->hasChildNodes())
-        {
-            if ($node->childNodes->length == 1)
-            {
-                $array[$node->firstChild->nodeName] = $node->firstChild->nodeValue;
-            }
-            else
-            {
-                foreach ($node->childNodes as $childNode)
-                {
-                    if ($childNode->nodeType != XML_TEXT_NODE)
-                    {
-                        $array[$childNode->nodeName][] = $this->getArray($childNode);
+        $N = new DOMDocument('1.0', 'UTF-8'); $start = false; $start2 = true;
+        $N->loadXML($xmlR);        
+        
+        $ToDelete = array();
+        $ToAdd = array();
+        $ParentNodeToAdd = new DOMNode(); 
+        
+        foreach($X->childNodes as $root) {            
+            foreach($root->childNodes as $p) {
+                
+                if ($p->nodeValue == $inici) { $start = true; }                                                
+                if($p->nodeValue == $fi) {
+                    $start = false;
+                    $ToDelete[] = $p;
+                    foreach($N->childNodes as $rootNew) {
+                        foreach($rootNew->childNodes as $pNew) {
+                            $X->importNode($pNew, true);
+                            $ToAdd[] = $pNew;                            
+                        }
                     }
-                }
+                }                                                
+                if ($start) { $ToDelete[] = $p; }
+                
             }
         }
         
-        return $array;
-    } 
+        foreach( $ToDelete as $TD ) $TD->parentNode->removeChild($TD);        
+        foreach( $ToAdd as $TD ) $TD->parentNode->appendChild($TD);
+                
+        var_dump($X->saveXML()); die('asdfsdafds');
+        
+        return $X;
+    }
+    
+    
+    
+    function getXMLBlocSimple($inici, $fi, $xml) {
+        
+        $X = new DOMDocument('1.0', 'UTF-8');
+        $X->loadXML($xml);
+        
+        $N = new DOMDocument('1.0', 'UTF-8'); $start = false;
+        $N->loadXML('<root></root>');
+        
+        foreach($X->childNodes as $root) {
+            foreach($root->childNodes as $p) {                
+                if($p->nodeValue == $fi) { $start = false; }
+                if ($start) {
+                    $N2 = $N->importNode($p, true);
+                    $N->documentElement->appendChild($N2);
+                }
+                if ($p->nodeValue == $inici) { $start = true; }
+                
+            }
+        }
+        
+        return $N;
+    }
+    
+    
+    function getXMLBloc($inici, $fi, $xml) {
+        
+        $X = new DOMDocument('1.0', 'UTF-8');
+        $X->loadXML($xml);
+        
+        $N = new DOMDocument('1.0', 'UTF-8'); $start = false;
+        $N->loadXML('<root></root>');        
+        foreach($X->childNodes as $document) {            
+            foreach($document->childNodes as $k) {
+                if( $k->getNodePath() == '/w:document/w:body' ) {
+                    foreach($k->childNodes as $p) {                                               
+                        if($p->nodeValue == $fi) { $start = false; }
+                        if ($start) {
+                            $N->documentElement->appendChild( $N->importNode($p, true) );    
+                        }
+                        if ($p->nodeValue == $inici) { $start = true; } //No guardem ni el node inicial ni el final                        
+                    }
+                }                
+            }    
+        }
+        
+        return $N;
+    }    
     
 
     public function getBlock($blockname, $xml)
@@ -964,3 +1030,5 @@ class MyAPI extends API
  }
 
  ?>
+
+ 
