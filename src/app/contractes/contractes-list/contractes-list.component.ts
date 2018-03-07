@@ -94,9 +94,12 @@ export class ContractesListComponent implements OnInit {
     this.HttpCEP.next(T);
   }
 
-  genDoc(idContracteControl: number) {
-    let CW = new ContracteWord(this.Contractes, idContracteControl);
+  genDoc(idContracteControl: number) {    
     this._db.doContracte( idContracteControl ).subscribe(X => {});
+  }
+  
+  genDocCompanyia( idContracteEspectacle: number, idContracteControl: number ) {
+    this._db.doContracteEspectacle( idContracteControl, idContracteEspectacle ).subscribe(X => {});
   }
 
 }

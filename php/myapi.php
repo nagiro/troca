@@ -16,6 +16,7 @@ class MyAPI extends API
         $this->dbh->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->LOCAL_URL = "../src/assets/docs/";
+        // $this->LOCAL_URL = "C:/Users/Usuario/Documents/Code/src/troca/tmp"; 
         
         
     }
@@ -79,12 +80,14 @@ class MyAPI extends API
     
     protected function GenWord(){
         
-        $idC = $this->request;
-        var_dump($idC);
+        $idC = $this->request['idC'];
+        $idCE = $this->request['idCE'];        
         
         \PhpOffice\PhpWord\Settings::setTempDir($this->LOCAL_URL.'tmp/');
                                       
         $Select = "Select * from contractes where ctc_idContracte = ".$idC;
+        if ($idCE > 0) $Select .= " AND cte_idContracteEspectacle = ". $idCE;
+        
         $Rows = $this->runQuery($Select, array(), false, true);        
                                       
         $CE = array();        
@@ -95,17 +98,30 @@ class MyAPI extends API
             $CE[$Row['cte_idContracteEspectacle']]['CFL'][$Row['ctf_idFuncio']] = $Row; 
         }
         
+        $this->GenWordContracte($idC, $Companyies, $CE);
+        
+        foreach($CE as $idCE => $R){
+            foreach($CE[$idCE]['CFL'] as $idCF => $Row){
+                $this->GenFullRuta($idCF, $Companyies, $Row);
+            }
+        }
+        
+        return array($url, 200);
+    }
+            
+    
+    private function GenWordContracte($idC, $Companyies, $CE) {
         $phpword = new \PhpOffice\PhpWord\PhpWord();
-        $T = $phpword->loadTemplate( $this->LOCAL_URL.'ModelsDocuments/Contracte2.docx');        
+        $T = $phpword->loadTemplate( $this->LOCAL_URL.'ModelsDocuments/Contracte2.docx');
         
         $D = getdate();
-                       
-        $T->setValue('DataDocument', htmlspecialchars("Girona, a ".$D['mday']." ".$this->getMes($D['mon'])." de ".$D['year']));        
+        
+        $T->setValue('DataDocument', htmlspecialchars("Girona, a ".$D['mday']." ".$this->getMes($D['mon'])." de ".$D['year']));
         $T->setValue('LlistatCompanyies', implode(', ', $Companyies));
         $T->setValue('NomEntitat', htmlspecialchars($Rows[0]["e_Nom"]));
         $T->setValue('AdrecaEntitat', htmlspecialchars($Rows[0]["e_Adreca"]. ", ".$Rows[0]["e_CodiPostal"]." ".$Rows[0]["e_Ciutat"]));
         $T->setValue('CifEntitat', htmlspecialchars($Rows[0]["e_CIF"]));
-                
+        
         /* GENERO EL BLOC 1, DETALL D'INFORMACIÓ */
         
         $phpWordHandle = new \PhpOffice\PhpWord\PhpWord();
@@ -116,52 +132,105 @@ class MyAPI extends API
             $section->addListItem($OCF['Row']['ep_Nom'], 1);
             $section->addListItem($OCF['Row']['es_Nom'], 1);
             $section->addListItem($OCF['Row']['es_Poblacio'], 1);
-            foreach($OCF['CFL'] as $idF => $CF) {                
-                $section->addListItem('Hores:', 1);
-                $section->addListItem('Dia '.$CF['ctf_Data']. ' a les '.$CF['ctf_Hora_inici'], 2);                  
-            }
-        }
-        
-        $objWriter =  \PhpOffice\PhpWord\IOFactory::createWriter($phpWordHandle);
-        $fullXML = $objWriter->getWriterPart('Document')->write();        
-        $T->replaceBlock('BLOC1', $this->getBodyBlock($fullXML));
-                                        
-        /* Fi bloc 1*/
-        
-        /* Inici Bloc 2 Dades econòmiques */
-        
-        $phpWordHandle = new \PhpOffice\PhpWord\PhpWord();
-        $section = $phpWordHandle->addSection();        
-        $table = $section->addTable();
-        $table->addRow();
-        $table->addCell()->addText('Nom espectacle');
-        $table->addCell()->addText('BAse');
-        $table->addCell()->addText('IVA');
-        $table->addCell()->addText('Total');        
-
-        foreach($CE as $idC => $OCF) {
-            $table->addRow();
-            $table->addCell()->addText($OCF['Row']['c_Nom']);            
             foreach($OCF['CFL'] as $idF => $CF) {
-                $table->addCell()->addText($CF['cte_PreuAC']);
-                $table->addCell()->addText($CF['cte_IVAAC']);
-                $table->addCell()->addText($CF['cte_TotalAC']);                                        
+                $section->addListItem('Hores:', 1);
+                $section->addListItem('Dia '.$CF['ctf_Data']. ' a les '.$CF['ctf_Hora_inici'], 2);
             }
         }
         
         $objWriter =  \PhpOffice\PhpWord\IOFactory::createWriter($phpWordHandle);
         $fullXML = $objWriter->getWriterPart('Document')->write();
-        $T->replaceBlock('BLOC2', $this->getBodyBlock($fullXML));               
-                
+        $T->replaceBlock('BLOC1', $this->getBodyBlock($fullXML));
+        
+        /* Fi bloc 1*/
+        
+        /* Inici Bloc 2 Dades econòmiques */
+        
+        $phpWordHandle = new \PhpOffice\PhpWord\PhpWord();
+        $section = $phpWordHandle->addSection();
+        $table = $section->addTable();
+        $table->addRow();
+        $table->addCell()->addText('Nom espectacle');
+        $table->addCell()->addText('BAse');
+        $table->addCell()->addText('IVA');
+        $table->addCell()->addText('Total');
+        
+        foreach($CE as $idC => $OCF) {
+            $table->addRow();
+            $table->addCell()->addText($OCF['Row']['c_Nom']);
+            foreach($OCF['CFL'] as $idF => $CF) {
+                $table->addCell()->addText($CF['cte_PreuAC']);
+                $table->addCell()->addText($CF['cte_IVAAC']);
+                $table->addCell()->addText($CF['cte_TotalAC']);
+            }
+        }
+        
+        $objWriter =  \PhpOffice\PhpWord\IOFactory::createWriter($phpWordHandle);
+        $fullXML = $objWriter->getWriterPart('Document')->write();
+        $T->replaceBlock('BLOC2', $this->getBodyBlock($fullXML));
+        
         /* FI BLOC 2 */
         
-        $url = $this->LOCAL_URL.'../tmp/Doc.docx';
+        $url = $this->LOCAL_URL.'../tmp/C'.$idC.'.docx';
+                
+        $T->saveAs($url);
+    }
+
+    
+    private function GenFullRuta($idCF, $Companyies, $R) {
+        
+        $phpword = new \PhpOffice\PhpWord\PhpWord();
+        $T = $phpword->loadTemplate( $this->LOCAL_URL.'ModelsDocuments/FullRuta.docx');        
+                                                     
+        $T->setValue('ESPECTACLE', htmlspecialchars($R['ep_Nom']));
+        $T->setValue('MUNICIPI', htmlspecialchars($R['es_Poblacio']));
+        $T->setValue('NOM_COMPANYIA', htmlspecialchars($R['c_Nom']));
+        $T->setValue('NOM_ESPECTACLE', htmlspecialchars($R['ep_Nom']));
+        $T->setValue('MUNICIPI', htmlspecialchars($R['es_Poblacio']));
+        $T->setValue('DIA', htmlspecialchars($R['ctf_Data']));
+        $T->setValue('HORA', htmlspecialchars($R['ctf_Hora_inici']));
+        $T->setValue('ESPAI', htmlspecialchars($R['es_Nom']));
+        $T->setValue('TEXT_CARACTERISTIQUES_ACTUACIO', htmlspecialchars($R['']));
+        $T->setValue('HORA_ARRIBADA', htmlspecialchars($R['ctf_Hora_arribada']));
+        $T->setValue('ADRECA_ESPAI', htmlspecialchars($R['']));
+        $T->setValue('POBLE_ESPAI', htmlspecialchars($R['es_Poblacio']));
+        $T->setValue('TELEFON_ESPAI', htmlspecialchars($R['']));
+        $T->setValue('TEXT_CARREGA_DESCARREGA', htmlspecialchars($R['es_CarregaDescarrega_Text']));
+        $T->setValue('TEXT_APARCAMENT', htmlspecialchars($R['es_Aparcament_Text']));
+        $T->setValue('TEXT_LLOC_CANVIARSE', htmlspecialchars($R['es_Lloc_Canviarse_text']));
+        $T->setValue('RESPONSABLE_COMPANYIA', htmlspecialchars($R['c_Responsable']));
+        $T->setValue('RESPONSABLE_ENTITAT', htmlspecialchars($R['']));
+        $T->setValue('TELEFON_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Telefon']));
+        $T->setValue('EMAIL_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Email']));
+        $T->setValue('NOM_ENTITAT', htmlspecialchars($R['e_Nom']));
+        $T->setValue('NOM_ESPAI', htmlspecialchars($R['es_Nom']));
+        $T->setValue('RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Responsable']));
+        $T->setValue('TELEFON_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Telefon']));
+        $T->setValue('ACORDS_TECNICS', htmlspecialchars($R['']));
+        $T->setValue('DATA_EMISSIO', htmlspecialchars($R['']));
+                
+        $nom = 'FR'.$idCF.'--'.$this->clean($R['ep_Nom']).'--'.$this->clean($R['ctf_Data']).'--'.$this->clean($R['ctf_Hora_inici']).'.docx';
+        $url = $this->LOCAL_URL.'../tmp/'.$nom;
         
         $T->saveAs($url);
-        
-        return array($url, 200);
     }
-            
+    
+    protected function clean($string) {
+        $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+        
+        return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+    }
+    
+    
+    protected function getBodyBlock($string){
+        if (preg_match('%(?i)(?<=<w:body>)[\s|\S]*?(?=</w:body>)%', $string, $regs)) {
+            return $regs[0];
+        } else {
+            return '';
+        }
+    }
+    
     
      ###########################################################
      # USUARIS 
