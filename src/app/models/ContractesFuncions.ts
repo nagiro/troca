@@ -2,17 +2,17 @@ import { NumberType, TextType, DateType, BooleanType, HoraType, FieldConfig, Tab
 
 export class ContracteFuncioFields {
 
-  ctf_idFuncio = new NumberType(new FieldConfig('ctf_idFuncio', 'Id', 'Input', false, 1 ) );
-  ctf_idContracteEspectacle = new NumberType(new FieldConfig('ctf_idContracteEspectacle', 'Id cont.esp.', 'Input', false, 1 ) );
-  ctf_Hora_inici = new HoraType(new FieldConfig('ctf_Hora_inici', 'Hora inici', 'Hora', true, 3 ) );
-  ctf_Hora_arribada = new HoraType(new FieldConfig('ctf_Hora_arribada', 'Hora arribada', 'Hora', true, 3 ) );
-  ctf_Hora_Recollida= new HoraType(new FieldConfig('ctf_Hora_Recollida', 'Hora recollida', 'Hora', true, 3 ) );
-  ctf_Adreca_Arribada= new TextType(new FieldConfig('ctf_Adreca_Arribada', 'Adreça arribada', 'Input', true, 3 ) );
-  ctf_Aparcament = new TextType(new FieldConfig('ctf_Aparcament', 'Aparcament', 'Input', true, 3 ) );
-  ctf_CarregaDescarrega = new TextType(new FieldConfig('ctf_CarregaDescarrega', 'Carrega/Descarrega', 'Input', true, 3 ) );
-  ctf_On_Canviarse = new TextType(new FieldConfig('ctf_On_Canviarse', 'On canviar-se', 'Input', true, 3 ) );
-  ctf_Acords_tecnics= new TextType(new FieldConfig('ctf_Acords_tecnics', 'Acords tècnics', 'Input', true, 3 ) );
-  ctf_Data = new DateType(new FieldConfig('ctf_Data', 'Data acte', 'Date', true, 3 ) );
+  ctf_idFuncio = new NumberType(new FieldConfig('ctf_idFuncio', 'Id', 'Input', false, 2 ) );
+  ctf_idContracteEspectacle = new NumberType(new FieldConfig('ctf_idContracteEspectacle', 'Id cont.esp.', 'Input', false, 2 ) );
+  ctf_Data = new DateType(new FieldConfig('ctf_Data', 'Data acte', 'Date', true, 2 ) );
+  ctf_Hora_inici = new HoraType(new FieldConfig('ctf_Hora_inici', 'Hora inici', 'Hora', true, 2 ) );
+  ctf_Hora_arribada = new HoraType(new FieldConfig('ctf_Hora_arribada', 'Hora arribada', 'Hora', true, 2 ) );
+  ctf_Hora_Recollida = new HoraType(new FieldConfig('ctf_Hora_Recollida', 'Hora recollida', 'Hora', true, 2 ) );
+  ctf_Adreca_Arribada = new TextType(new FieldConfig('ctf_Adreca_Arribada', 'Adreça arribada', 'Input', true, 6 ) );
+  ctf_Aparcament = new TextType(new FieldConfig('ctf_Aparcament', 'Aparcament', 'Textarea', true, 6 ) );
+  ctf_CarregaDescarrega = new TextType(new FieldConfig('ctf_CarregaDescarrega', 'Carrega/Descarrega', 'Textarea', true, 6 ) );
+  ctf_On_Canviarse = new TextType(new FieldConfig('ctf_On_Canviarse', 'On canviar-se', 'Textarea', true, 6 ) );
+  ctf_Acords_tecnics= new TextType(new FieldConfig('ctf_Acords_tecnics', 'Acords tècnics', 'Textarea', true, 12 ) );
 }
 
 export class ContracteFuncioRow extends TableRow<ContracteFuncioFields> {

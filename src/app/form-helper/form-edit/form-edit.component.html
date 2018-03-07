@@ -24,6 +24,17 @@
   					[Nom] = "F.FieldConfig.FieldName"  					
 			></app-textarea-helper>
 		</div>
+		<div *ngSwitchCase="'SelectMultiple'">
+			
+			<app-select-helper-multiple
+					[Titol] = "F.FieldConfig.FieldTitol"
+  					[(Dada)] = "E.FieldList[i]"
+  					[Nom] = "F.FieldConfig.FieldName"
+  					[Extres] = "F.Extres" 
+			></app-select-helper-multiple>
+
+		</div>
+		
 		<div *ngSwitchCase="'Date'">
 			<app-datepicker-helper
 					[Titol] = "F.FieldConfig.FieldTitol"

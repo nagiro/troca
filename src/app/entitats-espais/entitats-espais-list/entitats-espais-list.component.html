@@ -21,14 +21,12 @@
 		  			<span class="link" (click)="showEspai(null, Row.Fields.e_idAjuntament)">+ espai</span>
 		  		</td>
 		  		<td>		  		 		
-			  		<div 
-			  			*ngFor="let E of EntitatsEspais.getEspais( Row.Fields.e_idAjuntament )" 
-			  			(click)="showEspai(E, Row.Fields.e_idAjuntament)"
-			  			class="linkhand"
-			  		>
-			  			{{E.Fields.es_Nom}}			  						  			
-			  			<span *ngIf="CercaFromContracte" class="link" (click)="addToContract(E)">(Afegir a contracte)</span>		  				
+			  		<div *ngFor="let E of EntitatsEspais.getEspais( Row.Fields.e_idAjuntament )">
+			  			<span (click)="showEspai(E, Row.Fields.e_idAjuntament)"
+			  			class="linkhand">{{E.Fields.es_Nom}}</span>
+			  			<span *ngIf="CercaFromContracte" class="link" (click)="addToContract(E)">(Afegir a contracte)</span>			  						  						  					  			
 			  		</div>	
+			  		
 			  	</td>		  			  		
 		  	</tr>
 		  </table>

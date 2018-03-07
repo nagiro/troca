@@ -16,9 +16,8 @@ class MyAPI extends API
         $this->dbh->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         //$this->LOCAL_URL = "../src/assets/docs/";
-        $this->LOCAL_URL = "C:/Users/Usuario/Documents/Code/src/troca/src/assets/"; 
-        
-        
+        // $this->LOCAL_URL = "C:/Users/Usuario/Documents/Code/src/troca/src/assets/";
+        $this->LOCAL_URL = "/Users/nagiro/Documents/Code/troca/troca/src/assets/";        
     }
 
     protected function getNew() {
@@ -31,10 +30,10 @@ class MyAPI extends API
     } 
 
     protected function getDadesTaulaById() {
-        $Taula = $this->request['taula'];
-        $Camp = $this->request['camp'];
-        $id = $this->request['id'];
-        $RET = $this->runQuery("Select * from {$Taula} WHERE {$Camp} = {$id}", array(), false, true);
+        $Taula = $this->request['post']['taula'];
+        $Camp = $this->request['post']['camp'];
+        $id = $this->request['post']['id'];        
+        $RET = $this->runQuery("Select * from {$Taula} WHERE {$Camp} = {$id}", array(), true, true);        
         if (empty($RET)) return array("No he trobat cap valor", 500);
         else return array($RET, 200);
     }
@@ -61,6 +60,11 @@ class MyAPI extends API
         else return array(array('List'=>$RET, 'c'=>$c['c']), 200);
     }
     
+    protected function DateString($date) {
+        list($a, $m, $d) = explode("-", $date);
+        return $d.'/'.$m.'/'.$a;
+    }
+    
     protected function getMes($m) {
         switch($m) {
             case 1: return 'de gener'; break;
@@ -83,7 +87,8 @@ class MyAPI extends API
         $idC = $this->request['idC'];
         $idCE = (isset($this->request['idCE']))?$this->request['idCE']:0;        
         
-        \PhpOffice\PhpWord\Settings::setTempDir($this->LOCAL_URL.'tmp/');
+        // $this->LOCAL_URL.'tmp/'
+        \PhpOffice\PhpWord\Settings::setTempDir("/tmp");
                                       
         $Select = "Select * from contractes where ctc_idContracte = ".$idC;
         if ($idCE > 0) $Select .= " AND cte_idContracteEspectacle = ". $idCE;
@@ -106,7 +111,8 @@ class MyAPI extends API
             }
         }
         
-        $rootPath = realpath($this->LOCAL_URL.'tmp');        
+        $rootPath = realpath($this->LOCAL_URL.'tmp');
+        
         $zip = new ZipArchive();
         $zip->open($rootPath.'/Contracte.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
         $files = new RecursiveIteratorIterator(
@@ -158,7 +164,7 @@ class MyAPI extends API
             $section->addListItem($OCF['Row']['es_Poblacio'], 1);
             foreach($OCF['CFL'] as $idF => $CF) {
                 $section->addListItem('Hores:', 1);
-                $section->addListItem('Dia '.$CF['ctf_Data']. ' a les '.$CF['ctf_Hora_inici'], 2);
+                $section->addListItem('Dia '.$this->DateString($CF['ctf_Data']). ' a les '.$CF['ctf_Hora_inici'], 2);
             }
         }
         
@@ -171,8 +177,10 @@ class MyAPI extends API
         /* Inici Bloc 2 Dades econòmiques */
         
         $phpWordHandle = new \PhpOffice\PhpWord\PhpWord();
+        
         $section = $phpWordHandle->addSection();
         $table = $section->addTable();
+
         $table->addRow();
         $table->addCell()->addText('Nom espectacle');
         $table->addCell()->addText('BAse');
@@ -188,14 +196,14 @@ class MyAPI extends API
                 $table->addCell()->addText($CF['cte_TotalAC']);
             }
         }
-        
+    
         $objWriter =  \PhpOffice\PhpWord\IOFactory::createWriter($phpWordHandle);
         $fullXML = $objWriter->getWriterPart('Document')->write();
         $T->replaceBlock('BLOC2', $this->getBodyBlock($fullXML));
         
         /* FI BLOC 2 */
         
-        $url = $this->LOCAL_URL.'tmp/C'.$idC.'.docx';
+        $url = $this->LOCAL_URL.'tmp/C'.$idC.'.docx';        
                 
         $T->saveAs($url);
     }
@@ -211,27 +219,28 @@ class MyAPI extends API
         $T->setValue('NOM_COMPANYIA', htmlspecialchars($R['c_Nom']));
         $T->setValue('NOM_ESPECTACLE', htmlspecialchars($R['ep_Nom']));
         $T->setValue('MUNICIPI', htmlspecialchars($R['es_Poblacio']));
-        $T->setValue('DIA', htmlspecialchars($R['ctf_Data']));
+        $T->setValue('DIA', htmlspecialchars($this->DateString($R['ctf_Data'])));
         $T->setValue('HORA', htmlspecialchars($R['ctf_Hora_inici']));
         $T->setValue('ESPAI', htmlspecialchars($R['es_Nom']));
-        $T->setValue('TEXT_CARACTERISTIQUES_ACTUACIO', htmlspecialchars(''));
+        $T->setValue('TEXT_CARACTERISTIQUES_ACTUACIO', htmlspecialchars($R['ep_Requeriments']));
         $T->setValue('HORA_ARRIBADA', htmlspecialchars($R['ctf_Hora_arribada']));
-        $T->setValue('ADRECA_ESPAI', htmlspecialchars(''));
-        $T->setValue('POBLE_ESPAI', htmlspecialchars($R['es_Poblacio']));
-        $T->setValue('TELEFON_ESPAI', htmlspecialchars(''));
+        $T->setValue('ADRECA_ESPAI', htmlspecialchars($R['es_Adreca']));
+        $T->setValue('POBLE_ESPAI', htmlspecialchars($R['es_Poblacio']));        
         $T->setValue('TEXT_CARREGA_DESCARREGA', htmlspecialchars($R['es_CarregaDescarrega_Text']));
         $T->setValue('TEXT_APARCAMENT', htmlspecialchars($R['es_Aparcament_Text']));
         $T->setValue('TEXT_LLOC_CANVIARSE', htmlspecialchars($R['es_Lloc_Canviarse_text']));
-        $T->setValue('RESPONSABLE_COMPANYIA', htmlspecialchars($R['c_Responsable']));
-        $T->setValue('RESPONSABLE_ENTITAT', htmlspecialchars(''));
-        $T->setValue('TELEFON_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Telefon']));
-        $T->setValue('EMAIL_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Email']));
-        $T->setValue('NOM_ENTITAT', htmlspecialchars($R['e_Nom']));
-        $T->setValue('NOM_ESPAI', htmlspecialchars($R['es_Nom']));
+        $T->setValue('RESP_COMPANYIA_NOM', htmlspecialchars($R['ep_Tecnic_Nom']));
+        $T->setValue('RESP_COMPANYIA_TEL', htmlspecialchars($R['ep_Tecnic_Telefon']));
+        $T->setValue('RESP_COMPANYIA_MAIL', htmlspecialchars($R['ep_Tecnic_Email']));        
         $T->setValue('RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Responsable']));
         $T->setValue('TELEFON_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Telefon']));
-        $T->setValue('ACORDS_TECNICS', htmlspecialchars(''));
-        $T->setValue('DATA_EMISSIO', htmlspecialchars(''));
+        $T->setValue('EMAIL_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Email']));
+        $T->setValue('NOM_ENTITAT', htmlspecialchars($R['e_Nom']));        
+        $T->setValue('RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Responsable']));
+        $T->setValue('TELEFON_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Telefon']));
+        $T->setValue('EMAIL_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Email']));
+        $T->setValue('ACORDS_TECNICS', htmlspecialchars($R['ctf_Acords_tecnics']));
+        $T->setValue('DATA_EMISSIO', htmlspecialchars(date('d-m-Y', time())));
                 
         $nom = 'FR'.$idCF.'--'.$this->clean($R['ep_Nom']).'--'.$this->clean($R['ctf_Data']).'--'.$this->clean($R['ctf_Hora_inici']).'.docx';
         

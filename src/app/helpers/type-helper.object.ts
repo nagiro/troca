@@ -102,14 +102,33 @@ export class TextType implements DatabaseType<string> {
   Extres = [];
   FieldConfig = new FieldConfig();
 
-  constructor($FieldConfig?: FieldConfig) {
+  constructor($FieldConfig?: FieldConfig, $Extres?: string[]) {
     if ($FieldConfig) { this.FieldConfig = $FieldConfig; }
+    if ($Extres) { this.Extres = $Extres; }
   }
 
 
   toBDD() { return this.Val; }
   fromBDD(v: string) { if (v && v !== null) { this.Val = v; } }
   toString() { return this.Val; }
+
+}
+
+
+export class TextTypeMultiple implements DatabaseType<string[]> {
+  Val: string[];
+  Extres = [];
+  FieldConfig = new FieldConfig();
+
+  constructor($FieldConfig?: FieldConfig, $Extres?: string[]) {
+    if ($FieldConfig) { this.FieldConfig = $FieldConfig; }
+    if ($Extres) { this.Extres = $Extres; }
+  }
+
+
+  toBDD() { return this.Val.join('#'); }
+  fromBDD(v: string) { if (v && v !== null) { this.Val = v.split('#'); } }
+  toString() { return this.Val.join('#'); }
 
 }
 

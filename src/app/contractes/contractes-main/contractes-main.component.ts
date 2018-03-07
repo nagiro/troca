@@ -63,7 +63,7 @@ export class ContractesMainComponent implements OnInit {
             let EE = new EspaiRow();
             EE.fromBDD(E, [], true);
             this.ContracteFuncio.getNew( X.Max, this.ContracteEspectacle.Fields.cte_idContracteEspectacle.Val );
-            this.ContracteFuncio.Fields.ctf_Adreca_Arribada.Val = EE.Fields.es_Adreca.Val + '(' + EE.Fields.es_Poblacio.Val +')';
+            this.ContracteFuncio.Fields.ctf_Adreca_Arribada.Val = EE.Fields.es_Adreca.Val + '(' + EE.Fields.es_Poblacio.Val + ')';
             this.ContracteFuncio.Fields.ctf_Aparcament.Val = EE.Fields.es_Aparcament_Text.Val;
             this.ContracteFuncio.Fields.ctf_CarregaDescarrega.Val = EE.Fields.es_CarregaDescarrega_Text.Val;
             this.ContracteFuncio.Fields.ctf_On_Canviarse.Val = EE.Fields.es_Lloc_Canviarse_text.Val;

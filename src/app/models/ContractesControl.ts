@@ -2,10 +2,10 @@ import { NumberType, TextType, DateType, BooleanType, FieldConfig, TableRow, Tab
 
 export class ContracteControlFields {
   ctc_idContracte = new NumberType(new FieldConfig('ctc_idContracte', 'Id contracte', 'Input', false, 1 ) );
-  ctc_idprojecte = new NumberType(new FieldConfig('ctc_idprojecte', 'Id projecte', 'Select', false, 1 ) );
+  ctc_idprojecte = new NumberType(new FieldConfig('ctc_idprojecte', 'Id projecte', 'Input', false, 1 ) );
   ctc_idEntitat = new NumberType(new FieldConfig('ctc_idEntitat', 'Id entitat', 'Input', false, 1 ) );
   ctc_EntregatFullRuta = new BooleanType(new FieldConfig('ctc_EntregatFullRuta', 'Entregat Full Ruta?', 'Select', true, 3 ) );
-  ctc_EntregatContracte = new BooleanType(new FieldConfig('ctc_EntregatContracte', 'Id', 'Select', true, 3 ) );
+  ctc_EntregatContracte = new BooleanType(new FieldConfig('ctc_EntregatContracte', 'Entregat contracte?', 'Select', true, 3 ) );
   ctc_DataContracte = new DateType(new FieldConfig('ctc_DataContracte', 'Data contracte', 'Date', true, 3 ) );
   ctc_Observacions = new TextType(new FieldConfig('ctc_Observacions', 'Observacions', 'Textarea', true, 12 ) );
 }

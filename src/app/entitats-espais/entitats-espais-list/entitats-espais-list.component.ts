@@ -52,7 +52,7 @@ export class EntitatsEspaisListComponent implements OnInit {
   showEspai(Row: EspaiRow, idEntitat: NumberType) {
     let E = Row;
     if (!Row) { E = new EspaiRow(); E.getNew(idEntitat.Val); } else { E.tmp_action = 'U'; }
-    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Espais'] }).afterClosed()
+    let dialogRef = this._dialog.open(FormEditComponent, { width: '1024px', data: [E, 'Espais'] }).afterClosed()
       .subscribe( (R: EspaiRow ) => { this.reload(); });
   }
 

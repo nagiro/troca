@@ -1,0 +1,5 @@
+<mat-form-field style="width:100%">
+	<mat-select [disabled] ="!Dada.FieldConfig.Visible" placeholder="{{Titol}}" name="{{Nom}}"  [ngModel]="Dada.Val" (ngModelChange)="update($event)" multiple>
+		<mat-option *ngFor="let s of Extres" [value]="s">{{s}}</mat-option>
+	</mat-select>							    						
+</mat-form-field>

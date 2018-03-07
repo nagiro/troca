@@ -13,6 +13,7 @@ import { SelectHelperComponent } from './select-helper/select-helper.component';
 import { DatepickerHelperComponent } from './datepicker-helper/datepicker-helper.component';
 import { MatTableModule } from '@angular/material/table';
 import { FormEditComponent } from './form-edit/form-edit.component';
+import { SelectHelperMultipleComponent } from './select-helper-multiple/select-helper-multiple.component';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TextareaHelperComponent } from './textarea-helper/textarea-helper.component';
 
@@ -39,6 +40,7 @@ import { TextareaHelperComponent } from './textarea-helper/textarea-helper.compo
     SelectSearchComponent,
     InputHelperComponent,
     SelectHelperComponent,
+    SelectHelperMultipleComponent,
     DatepickerHelperComponent,
     TextareaHelperComponent,
   ],
@@ -50,6 +52,7 @@ import { TextareaHelperComponent } from './textarea-helper/textarea-helper.compo
     SelectSearchComponent,
     InputHelperComponent,
     SelectHelperComponent,
+    SelectHelperMultipleComponent,
     DatepickerHelperComponent,
     FormEditComponent,
     TextareaHelperComponent,

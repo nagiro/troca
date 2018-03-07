@@ -51,3 +51,32 @@ export class DbObject {
   }
 
 }
+
+/*
+ * 
+ * 
+ * DROP VIEW companyiesespectaclespreus;
+CREATE VIEW companyiesespectaclespreus as 
+  Select * FROM (SELECT * FROM Companyies LIMIT 10) as c 
+  LEFT JOIN espectacles e ON (c.c_idCompanyia = e.ep_idCompanyia)
+  LEFT JOIN preus p ON (p.p_idEspectacle = e.ep_idEspectacle);
+    
+DROP VIEW contractes;
+CREATE VIEW contractes as 
+    SELECT * FROM Projectes PR
+    INNER JOIN `contractescontrol` `CC` ON (`cc`.`ctc_idprojecte` = `pr`.`pr_idProjecte`)
+        LEFT JOIN `contracteespectacles` `CE` ON (`cc`.`ctc_idContracte` = `ce`.`cte_idcontracte`)
+        LEFT JOIN `contractesfuncions` `CF` ON (`ce`.`cte_idContracteEspectacle` = `cf`.`ctf_idContracteEspectacle`)
+        LEFT JOIN `espais` `E` ON (`e`.`es_idEspai` = `ce`.`cte_idEspai`)
+        LEFT JOIN `espectacles` `ES` ON (`es`.`ep_idEspectacle` = `ce`.`cte_idespectacle`)
+        LEFT JOIN `preus` `P` ON (`p`.`p_idEspectacle` = `es`.`ep_idEspectacle`)
+        LEFT JOIN `entitats` `EN` ON (`cc`.`ctc_idEntitat` = `en`.`e_idAjuntament`)
+        LEFT JOIN `companyies` `C` ON (`c`.`c_idCompanyia` = `es`.`ep_idCompanyia`);
+
+
+DROP VIEW entitatsespais;
+CREATE VIEW entitatsespais as 
+    SELECT * FROM `entitats` `e`
+        LEFT JOIN `espais` `es` ON (`es`.`es_idAjuntament` = `e`.`e_idAjuntament`);
+ * /
+ */
