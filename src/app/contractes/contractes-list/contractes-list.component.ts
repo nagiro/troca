@@ -43,7 +43,7 @@ export class ContractesListComponent implements OnInit {
   reload( X?: HttpParams ) {
     let H = (X) ? X : new HttpParams();
     this._db.getAllTableRows<any>('Contractes', H )
-      .subscribe( X => { this.Contractes = new ContractesObject(X); });
+      .subscribe( Y => { this.Contractes = new ContractesObject(Y); });
   }
 
   newContracte(idProjecte: number) {
@@ -96,7 +96,7 @@ export class ContractesListComponent implements OnInit {
 
   genDoc(idContracteControl: number) {
     let CW = new ContracteWord(this.Contractes, idContracteControl);
-    this._db.doContracte( CW ).subscribe(X => {});
+    this._db.doContracte( idContracteControl ).subscribe(X => {});
   }
 
 }

@@ -79,11 +79,12 @@ class MyAPI extends API
     
     protected function GenWord(){
         
-        $C = $this->request['ContracteControl'];
+        $idC = $this->request;
+        var_dump($idC);
         
         \PhpOffice\PhpWord\Settings::setTempDir($this->LOCAL_URL.'tmp/');
                                       
-        $Select = "Select * from contractes where ctc_idContracte = 12";
+        $Select = "Select * from contractes where ctc_idContracte = ".$idC;
         $Rows = $this->runQuery($Select, array(), false, true);        
                                       
         $CE = array();        
@@ -150,152 +151,17 @@ class MyAPI extends API
         
         $objWriter =  \PhpOffice\PhpWord\IOFactory::createWriter($phpWordHandle);
         $fullXML = $objWriter->getWriterPart('Document')->write();
-        $T->replaceBlock('BLOC2', $this->getBodyBlock($fullXML));
+        $T->replaceBlock('BLOC2', $this->getBodyBlock($fullXML));               
                 
         /* FI BLOC 2 */
-                
-        $T->saveAs($this->LOCAL_URL.'tmp/Doc.docx');
         
-        return true;
+        $url = $this->LOCAL_URL.'../tmp/Doc.docx';
+        
+        $T->saveAs($url);
+        
+        return array($url, 200);
     }
-        
-
-    protected function getBodyBlock($string){
-        if (preg_match('%(?i)(?<=<w:body>)[\s|\S]*?(?=</w:body>)%', $string, $regs)) {
-            return $regs[0];
-        } else {
-            return '';
-        }
-    }
-    
-    function replaceBlocSimple($inici, $fi, $xmlO, $xmlRArray) {
-                
-        foreach($xmlRArray as $k => $xml) {                 
-            $T = str_replace('<?xml version="1.0"?>', '', $xml);
-			$T = str_replace('<root>', '', $T); 
-			$T = str_replace('</root>', '', $T);
-			$xmlRArray[$k] = $T;
-        }               
-         
-        $xmlR = '<root>'.implode(' ', $xmlRArray).'</root>';        
-        
-        $X = new DOMDocument('1.0', 'UTF-8');
-        $X->loadXML($xmlO);        
-        
-        $N = new DOMDocument('1.0', 'UTF-8'); $start = false; $start2 = true;
-        $N->loadXML($xmlR);        
-        
-        $ToDelete = array();
-        $ToAdd = array();
-        $ParentNodeToAdd = new DOMNode(); 
-        
-        foreach($X->childNodes as $root) {            
-            foreach($root->childNodes as $p) {
-                
-                if ($p->nodeValue == $inici) { $start = true; }                                                
-                if($p->nodeValue == $fi) {
-                    $start = false;
-                    $ToDelete[] = $p;
-                    foreach($N->childNodes as $rootNew) {
-                        foreach($rootNew->childNodes as $pNew) {
-                            $X->importNode($pNew, true);
-                            $ToAdd[] = $pNew;                            
-                        }
-                    }
-                }                                                
-                if ($start) { $ToDelete[] = $p; }
-                
-            }
-        }
-        
-        foreach( $ToDelete as $TD ) $TD->parentNode->removeChild($TD);        
-        foreach( $ToAdd as $TD ) $TD->parentNode->appendChild($TD);
-                
-        var_dump($X->saveXML()); die('asdfsdafds');
-        
-        return $X;
-    }
-    
-    
-    
-    function getXMLBlocSimple($inici, $fi, $xml) {
-        
-        $X = new DOMDocument('1.0', 'UTF-8');
-        $X->loadXML($xml);
-        
-        $N = new DOMDocument('1.0', 'UTF-8'); $start = false;
-        $N->loadXML('<root></root>');
-        
-        foreach($X->childNodes as $root) {
-            foreach($root->childNodes as $p) {                
-                if($p->nodeValue == $fi) { $start = false; }
-                if ($start) {
-                    $N2 = $N->importNode($p, true);
-                    $N->documentElement->appendChild($N2);
-                }
-                if ($p->nodeValue == $inici) { $start = true; }
-                
-            }
-        }
-        
-        return $N;
-    }
-    
-    
-    function getXMLBloc($inici, $fi, $xml) {
-        
-        $X = new DOMDocument('1.0', 'UTF-8');
-        $X->loadXML($xml);
-        
-        $N = new DOMDocument('1.0', 'UTF-8'); $start = false;
-        $N->loadXML('<root></root>');        
-        foreach($X->childNodes as $document) {            
-            foreach($document->childNodes as $k) {
-                if( $k->getNodePath() == '/w:document/w:body' ) {
-                    foreach($k->childNodes as $p) {                                               
-                        if($p->nodeValue == $fi) { $start = false; }
-                        if ($start) {
-                            $N->documentElement->appendChild( $N->importNode($p, true) );    
-                        }
-                        if ($p->nodeValue == $inici) { $start = true; } //No guardem ni el node inicial ni el final                        
-                    }
-                }                
-            }    
-        }
-        
-        return $N;
-    }    
-    
-
-    public function getBlock($blockname, $xml)
-    {
-        $xmlBlock = null;
-        preg_match(
-            '/(<w:p.*>\${' . $blockname . '}<\/w:.*?p>)(.*)(<w:p.*\${\/' . $blockname . '}<\/w:.*?p>)/is',
-            $xml,
-            $matches
-            );
-        return $matches;
-    }
-    
-    public function replaceBlock($blockname, $replacement, $XML)
-    {
-        preg_match(
-            '/(<w:p.*>\${' . $blockname . '}<\/w:.*?p>)(.*)(<w:p.*\${\/' . $blockname . '}<\/w:.*?p>)/is',
-            $XML,
-            $matches
-            );
-        
-        if (isset($matches[3])) {
-            return str_replace(
-                $matches[2] . $matches[3] . $matches[4],
-                $replacement,
-                $XML
-                );
-        }
-    }
-    
-    
+            
     
      ###########################################################
      # USUARIS 

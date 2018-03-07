@@ -38,8 +38,8 @@ export class DbObject {
     return this.http.post<T>( this.base + '/getDadesTaulaAll', P );
   }
 
-  public doContracte( O: ContracteWord) {
-    return this.http.post<ContracteWord>( this.base + '/GenWord', O );
+  public doContracte( O: number ) {
+    return this.http.post<string>( this.base + '/GenWord', O );
   }
 
   public doSave( O: ToBDDObject ) {
