@@ -15,8 +15,8 @@ class MyAPI extends API
         $this->dbh = new PDO( PDOString, Username, Password );
         $this->dbh->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->LOCAL_URL = "../src/assets/docs/";
-        // $this->LOCAL_URL = "C:/Users/Usuario/Documents/Code/src/troca/tmp"; 
+        //$this->LOCAL_URL = "../src/assets/docs/";
+        $this->LOCAL_URL = "C:/Users/Usuario/Documents/Code/src/troca/src/assets/"; 
         
         
     }
@@ -81,7 +81,7 @@ class MyAPI extends API
     protected function GenWord(){
         
         $idC = $this->request['idC'];
-        $idCE = $this->request['idCE'];        
+        $idCE = (isset($this->request['idCE']))?$this->request['idCE']:0;        
         
         \PhpOffice\PhpWord\Settings::setTempDir($this->LOCAL_URL.'tmp/');
                                       
@@ -106,28 +106,52 @@ class MyAPI extends API
             }
         }
         
-        return array($url, 200);
+        $rootPath = realpath($this->LOCAL_URL.'tmp');        
+        $zip = new ZipArchive();
+        $zip->open($rootPath.'/Contracte.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($rootPath),
+            RecursiveIteratorIterator::LEAVES_ONLY
+            );        
+        foreach ($files as $name => $file)
+        {                 
+            if (!$file->isDir() && $file->getFileName() != 'file.zip')
+            {         
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($rootPath) + 1);                
+                $zip->addFile($filePath, $relativePath);
+                $filesToDelete[] = $filePath;                
+            }
+        }
+        $zip->close();
+        foreach ($filesToDelete as $file) unlink($file);
+        
+        return array($rootPath.'/Contracte.zip', 200);
     }
             
     
     private function GenWordContracte($idC, $Companyies, $CE) {
         $phpword = new \PhpOffice\PhpWord\PhpWord();
-        $T = $phpword->loadTemplate( $this->LOCAL_URL.'ModelsDocuments/Contracte2.docx');
+        $T = $phpword->loadTemplate( $this->LOCAL_URL.'docs/ModelsDocuments/Contracte2.docx');
         
         $D = getdate();
         
         $T->setValue('DataDocument', htmlspecialchars("Girona, a ".$D['mday']." ".$this->getMes($D['mon'])." de ".$D['year']));
-        $T->setValue('LlistatCompanyies', implode(', ', $Companyies));
-        $T->setValue('NomEntitat', htmlspecialchars($Rows[0]["e_Nom"]));
-        $T->setValue('AdrecaEntitat', htmlspecialchars($Rows[0]["e_Adreca"]. ", ".$Rows[0]["e_CodiPostal"]." ".$Rows[0]["e_Ciutat"]));
-        $T->setValue('CifEntitat', htmlspecialchars($Rows[0]["e_CIF"]));
+        $T->setValue('LlistatCompanyies', implode(', ', $Companyies));        
         
         /* GENERO EL BLOC 1, DETALL D'INFORMACIÓ */
-        
+        $primer = true;
         $phpWordHandle = new \PhpOffice\PhpWord\PhpWord();
         $section = $phpWordHandle->addSection();
         
         foreach($CE as $idC => $OCF) {
+            
+            if ($primer):
+                $T->setValue('NomEntitat', htmlspecialchars($OCF['Row']["e_Nom"]));
+                $T->setValue('AdrecaEntitat', htmlspecialchars($OCF['Row']["e_Adreca"]. ", ".$OCF['Row']["e_CodiPostal"]." ".$OCF['Row']["e_Ciutat"]));
+                $T->setValue('CifEntitat', htmlspecialchars($OCF['Row']["e_CIF"]));
+                $primer = false;
+            endif;
             $section->addText($OCF['Row']['c_Nom']);
             $section->addListItem($OCF['Row']['ep_Nom'], 1);
             $section->addListItem($OCF['Row']['es_Nom'], 1);
@@ -171,7 +195,7 @@ class MyAPI extends API
         
         /* FI BLOC 2 */
         
-        $url = $this->LOCAL_URL.'../tmp/C'.$idC.'.docx';
+        $url = $this->LOCAL_URL.'tmp/C'.$idC.'.docx';
                 
         $T->saveAs($url);
     }
@@ -180,7 +204,7 @@ class MyAPI extends API
     private function GenFullRuta($idCF, $Companyies, $R) {
         
         $phpword = new \PhpOffice\PhpWord\PhpWord();
-        $T = $phpword->loadTemplate( $this->LOCAL_URL.'ModelsDocuments/FullRuta.docx');        
+        $T = $phpword->loadTemplate( $this->LOCAL_URL.'docs/ModelsDocuments/FullRuta.docx');        
                                                      
         $T->setValue('ESPECTACLE', htmlspecialchars($R['ep_Nom']));
         $T->setValue('MUNICIPI', htmlspecialchars($R['es_Poblacio']));
@@ -190,29 +214,32 @@ class MyAPI extends API
         $T->setValue('DIA', htmlspecialchars($R['ctf_Data']));
         $T->setValue('HORA', htmlspecialchars($R['ctf_Hora_inici']));
         $T->setValue('ESPAI', htmlspecialchars($R['es_Nom']));
-        $T->setValue('TEXT_CARACTERISTIQUES_ACTUACIO', htmlspecialchars($R['']));
+        $T->setValue('TEXT_CARACTERISTIQUES_ACTUACIO', htmlspecialchars(''));
         $T->setValue('HORA_ARRIBADA', htmlspecialchars($R['ctf_Hora_arribada']));
-        $T->setValue('ADRECA_ESPAI', htmlspecialchars($R['']));
+        $T->setValue('ADRECA_ESPAI', htmlspecialchars(''));
         $T->setValue('POBLE_ESPAI', htmlspecialchars($R['es_Poblacio']));
-        $T->setValue('TELEFON_ESPAI', htmlspecialchars($R['']));
+        $T->setValue('TELEFON_ESPAI', htmlspecialchars(''));
         $T->setValue('TEXT_CARREGA_DESCARREGA', htmlspecialchars($R['es_CarregaDescarrega_Text']));
         $T->setValue('TEXT_APARCAMENT', htmlspecialchars($R['es_Aparcament_Text']));
         $T->setValue('TEXT_LLOC_CANVIARSE', htmlspecialchars($R['es_Lloc_Canviarse_text']));
         $T->setValue('RESPONSABLE_COMPANYIA', htmlspecialchars($R['c_Responsable']));
-        $T->setValue('RESPONSABLE_ENTITAT', htmlspecialchars($R['']));
+        $T->setValue('RESPONSABLE_ENTITAT', htmlspecialchars(''));
         $T->setValue('TELEFON_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Telefon']));
         $T->setValue('EMAIL_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Email']));
         $T->setValue('NOM_ENTITAT', htmlspecialchars($R['e_Nom']));
         $T->setValue('NOM_ESPAI', htmlspecialchars($R['es_Nom']));
         $T->setValue('RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Responsable']));
         $T->setValue('TELEFON_RESPONSABLE_ENTITAT', htmlspecialchars($R['e_Telefon']));
-        $T->setValue('ACORDS_TECNICS', htmlspecialchars($R['']));
-        $T->setValue('DATA_EMISSIO', htmlspecialchars($R['']));
+        $T->setValue('ACORDS_TECNICS', htmlspecialchars(''));
+        $T->setValue('DATA_EMISSIO', htmlspecialchars(''));
                 
         $nom = 'FR'.$idCF.'--'.$this->clean($R['ep_Nom']).'--'.$this->clean($R['ctf_Data']).'--'.$this->clean($R['ctf_Hora_inici']).'.docx';
-        $url = $this->LOCAL_URL.'../tmp/'.$nom;
         
-        $T->saveAs($url);
+        $url = $this->LOCAL_URL.'tmp/';
+        $urlComp = $url.$this->clean($R['c_Nom']);
+        if(!file_exists($urlComp)) mkdir($urlComp);                      
+        
+        $T->saveAs($urlComp.'/'.$nom);
     }
     
     protected function clean($string) {
