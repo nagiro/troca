@@ -445,7 +445,7 @@ export class TableRowList<T1 extends TableRow<T2>, T2> {
   getById($Camp: string, $Valor: any): TableRow<T2> {
     return this.RowList.find( X => X.Fields[$Camp].Val === $Valor);
   }
-  
+
   getByFk($Camp: string, $Valor: any): TableRow<T2>[] {
     return this.RowList.filter( X => X.Fields[$Camp].Val === $Valor);
   }

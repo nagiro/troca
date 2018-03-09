@@ -28,6 +28,7 @@ import { EntitatsEspaisListComponent } from './entitats-espais/entitats-espais-l
 import { ContractesListComponent } from './contractes/contractes-list/contractes-list.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ContractesMainComponent } from './contractes/contractes-main/contractes-main.component';
+import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
@@ -62,6 +63,7 @@ const appRoutes: Routes = [
     MatPaginatorModule,
     MatDialogModule,
     MatTabsModule,
+    MatButtonModule,
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,

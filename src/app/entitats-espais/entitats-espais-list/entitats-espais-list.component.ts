@@ -32,7 +32,7 @@ export class EntitatsEspaisListComponent implements OnInit {
 
   reload( X?: HttpParams ) {
     let H = (X) ? X : new HttpParams();
-    this._db.getAllTableRows<any>('EntitatsEspais', H )
+    this._db.getAllTableRows<any>('entitatsespais', H )
       .subscribe( Y => { this.EntitatsEspais = new EntitatsEspaisObject(Y); console.log(this.EntitatsEspais)});
   }
 
@@ -45,14 +45,14 @@ export class EntitatsEspaisListComponent implements OnInit {
   showEntitat(Row: EntitatRow) {
     let E = Row;
     if (!Row) { E = new EntitatRow(); E.getNew(); } else { E.tmp_action = 'U'; }
-    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Entitats'] }).afterClosed()
+    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'entitats'] }).afterClosed()
       .subscribe( (R: EntitatRow ) => { this.reload(); });
   }
 
   showEspai(Row: EspaiRow, idEntitat: NumberType) {
     let E = Row;
     if (!Row) { E = new EspaiRow(); E.getNew(idEntitat.Val); } else { E.tmp_action = 'U'; }
-    let dialogRef = this._dialog.open(FormEditComponent, { width: '1024px', data: [E, 'Espais'] }).afterClosed()
+    let dialogRef = this._dialog.open(FormEditComponent, { width: '1024px', data: [E, 'espais'] }).afterClosed()
       .subscribe( (R: EspaiRow ) => { this.reload(); });
   }
 

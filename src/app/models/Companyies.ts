@@ -1,7 +1,7 @@
 import { TableRow, NumberType, TextType, TableModelListData, TableRowList, TableSearchList, FieldConfig } from '../helpers/type-helper.object';
 
 export class CompanyiaFields {
-    c_idCompanyia = new TextType( new FieldConfig('c_idCompanyia', 'Id', 'Input', false, 1 ) );
+    c_idCompanyia = new NumberType( new FieldConfig('c_idCompanyia', 'Id', 'Input', false, 1 ) );
     c_NIFCompanyia = new TextType( new FieldConfig('c_NIFCompanyia', 'NIF companyia', 'Input', true, 3 ) );
     c_Nom = new TextType( new FieldConfig('c_Nom', 'Nom', 'Input', true, 8 ) );
 

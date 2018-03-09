@@ -29,6 +29,7 @@ export class ContractesListComponent implements OnInit {
   Contractes = new ContractesObject();
   Projectes = new ProjectesSearchList();
   Params = new HttpParams();
+  DocGenNoExist = true;
 
   HttpCEP = new BehaviorSubject<HttpParams>(new HttpParams());
   ContractesSearch = '';
@@ -42,7 +43,7 @@ export class ContractesListComponent implements OnInit {
 
   reload( X?: HttpParams ) {
     let H = (X) ? X : new HttpParams();
-    this._db.getAllTableRows<any>('Contractes', H )
+    this._db.getAllTableRows<any>('contractes', H )
       .subscribe( Y => { this.Contractes = new ContractesObject(Y); console.log(this.Contractes); });
   }
 
@@ -53,14 +54,14 @@ export class ContractesListComponent implements OnInit {
   editProjecte(Row: ProjecteRow) {
     let E = Row;
     if (!Row) { E = new ProjecteRow(); E.getNew(); } else { E.tmp_action = 'U'; }
-    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Projectes'] }).afterClosed()
+    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'projectes'] }).afterClosed()
       .subscribe( (R: ProjecteRow) => { this.reload(); });
   }
 
   editControl(Row: ContracteControlRow) {
     let E = Row;
     if (Row) { E.tmp_action = 'U';
-      let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'ContractesControl'] }).afterClosed()
+      let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'contractescontrol'] }).afterClosed()
         .subscribe( (R: ContracteControlRow) => { this.reload(); });
     }
   }
@@ -76,7 +77,7 @@ export class ContractesListComponent implements OnInit {
   editEspectacle(Row: ContracteEspectacleRow) {
     let E = Row;
     if (Row) { E.tmp_action = 'U';
-      let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'ContracteEspectacles'] }).afterClosed()
+      let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'contracteespectacles'] }).afterClosed()
         .subscribe( (R: ContracteEspectacleRow) => { this.reload(); });
     }
   }
@@ -84,7 +85,7 @@ export class ContractesListComponent implements OnInit {
   editFuncio(Row: ContracteFuncioRow) {
     let E = Row;
     if (Row) { E.tmp_action = 'U';
-      let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'ContractesFuncions'] }).afterClosed()
+      let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'contractesfuncions'] }).afterClosed()
         .subscribe( (R: ContracteFuncioRow) => { this.reload(); });
     }
   }
@@ -94,12 +95,12 @@ export class ContractesListComponent implements OnInit {
     this.HttpCEP.next(T);
   }
 
-  genDoc(idContracteControl: number) {    
-    this._db.doContracte( idContracteControl ).subscribe(X => {});
+  genDoc(idContracteControl: number) {
+    this._db.doContracte( idContracteControl ).subscribe(X => { this.DocGenNoExist = false; });
   }
-  
+
   genDocCompanyia( idContracteEspectacle: number, idContracteControl: number ) {
-    this._db.doContracteEspectacle( idContracteControl, idContracteEspectacle ).subscribe(X => {});
+    this._db.doContracteEspectacle( idContracteControl, idContracteEspectacle ).subscribe(X => { this.DocGenNoExist = false; });
   }
 
 }

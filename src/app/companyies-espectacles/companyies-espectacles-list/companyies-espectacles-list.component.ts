@@ -38,7 +38,7 @@ export class CompanyiesEspectaclesListComponent implements OnInit, AfterViewInit
 
   reload( X?: HttpParams ) {
     let H = (X) ? X : new HttpParams();
-    this._db.getAllTableRows<any>('CompanyiesEspectaclesPreus', H )
+    this._db.getAllTableRows<any>('companyiesespectaclespreus', H )
       .subscribe( X => { this.CompanyiesEspectaclesPreus = new CompanyiaEspectaclePreusObject(X); });
   }
 
@@ -72,21 +72,21 @@ export class CompanyiesEspectaclesListComponent implements OnInit, AfterViewInit
   showCompanyia(Row: CompanyiaRow) {
     let E = Row;
     if (!Row) { E = new CompanyiaRow(); E.getNew(); } else { E.tmp_action = 'U'; }
-    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Companyies'] }).afterClosed()
+    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'companyies'] }).afterClosed()
       .subscribe( (R: CompanyiaRow ) => { this.reload(); });
   }
 
   showEspectacle(Row: EspectacleRow, idCompanyia: NumberType) {
     let E = Row;
     if (!Row) { E = new EspectacleRow(); E.getNew(idCompanyia); } else { E.tmp_action = 'U'; }
-    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Espectacles'] }).afterClosed()
+    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'espectacles'] }).afterClosed()
       .subscribe( (R: EspectacleRow ) => { this.reload(); });
   }
 
   showPreu(Row: PreuRow, idEspectacle: NumberType ) {
     let E = Row;
     if (!Row) { E = new PreuRow(); E.getNew(idEspectacle); } else { E.tmp_action = 'U'; }
-    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'Preus'] }).afterClosed()
+    let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [E, 'preus'] }).afterClosed()
       .subscribe( (R: PreuRow ) => { this.reload(); });
   }
 

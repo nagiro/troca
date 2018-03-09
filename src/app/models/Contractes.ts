@@ -54,33 +54,52 @@ export class ContractesObject {
     }
   }
 
+  getNomEspai(idE: number) {
+    let A = this.getEspaiById(idE);
+    if (A) { return A.Fields.es_Nom.toString(); } else { return 'N/D'; }
+  }
+
+  getNomEspectacle(idE: number) {
+    let A = this.getEspectacleById(idE);
+    if (A) { return A.Fields.ep_Nom.toString(); } else { return 'N/D'; }
+  }
+
+  getNomCompanyiaFromEspectacleId(idE: number) {
+    let A = this.getEspectacleById(idE);
+    if (A) {
+      let B = this.getCompanyiaById( A.Fields.ep_idCompanyia.Val );
+      return (B) ? B.Fields.c_Nom.toString() : 'N/D';
+    } else { return 'N/D'; }
+
+  }
+
   getEntitatById(id: number) { return this.Entitats.getById('e_idAjuntament', id); }
   getProjecteById(id: number) { return this.Projectes.getById('pr_idProjecte', id); }
   getEspaiById(id: number) { return this.Espais.getById('es_idEspai', id); }
   getEspectacleById(id: number) { return this.Espectacles.getById('ep_idEspectacle', id); }
   getCompanyiaById(id: number) { return this.Companyies.getById('c_idCompanyia', id); }
-  getContractesEspectaclesFromContracteControl(idCC: number): ContracteEspectacleRow[] { return this.ContractesEspectacles.getByFk('cte_idcontracte', idCC); }
+  getContractesEspectaclesFromContracteControl(idCC: number): ContracteEspectacleRow[] { return this.ContractesEspectacles.getByFk('cte_idContracte', idCC);  }
   getContractesFuncionsFromContractesEspectacles(idCE: number): ContracteFuncioRow[] { return this.ContractesFuncions.getByFk('ctf_idContracteEspectacle', idCE); }
 
 }
 
 export class CECFTemp {
-  CE: RowValor = new RowValor('ContracteEspectacles');
+  CE: RowValor = new RowValor('contracteespectacles');
   CF: RowValor[] = [];
 }
 
 export class ContracteWord {
-  ContracteControl = new RowValor('ContractesControl');
+  ContracteControl = new RowValor('contractescontrol');
   ContracteEspectacles: CECFTemp[] = [];
 
   constructor(CO: ContractesObject, idContracte: number) {
     let CECF = new CECFTemp();
-    this.ContracteControl = CO.ContractesControl.getById('ctc_idContracte', idContracte).toBDD('ContractesControl');
+    this.ContracteControl = CO.ContractesControl.getById('ctc_idContracte', idContracte).toBDD('contractescontrol');
     CO.getContractesEspectaclesFromContracteControl( idContracte ).forEach( CEO => {
       CO.getContractesFuncionsFromContractesEspectacles( CEO.Fields.cte_idContracteEspectacle.Val ).forEach( CFO => {
-        CECF.CF.push(CFO.toBDD('ContractesFuncions'));
+        CECF.CF.push(CFO.toBDD('contractesfuncions'));
       });
-      CECF.CE = CEO.toBDD('ContracteEspectacles');
+      CECF.CE = CEO.toBDD('contracteespectacles');
       this.ContracteEspectacles.push(CECF);
     });
   }

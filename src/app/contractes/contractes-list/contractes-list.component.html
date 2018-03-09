@@ -27,41 +27,51 @@
 				<mat-form-field>
 			    		<input matInput placeholder="Filter" name="S1" (ngModelChange)="FilterContracteControl($event)" [ngModel] = "ContractesSearch">
 			  	</mat-form-field>
+			  	<a href="/assets/tmp/Contracte.zip" mat-button [disabled]="DocGenNoExist" color="primary">Baixa't document</a>			  	
 			</mat-card-header>
-			<mat-card-content>					
+			<mat-card-content>			  				
 			  <table class="table">
 			  	<tr>
 			  		<th>ID</th>
 			  		<th>Control</th>
 			  		<th>Espectacle + Funcions</th>
 			  	</tr>
+			  
 			  	<tr *ngFor="let Row of Contractes.ContractesControl.RowList">
 					<td><span>{{Row.Fields.ctc_idContracte.Val}}</span></td>
-			  		<td>
+ 			  		<td>
 			  			<span (click)="editControl(Row)" class="linkhand" >{{Contractes.getEntitatById( Row.Fields.ctc_idEntitat.Val ).Fields.e_Nom.Val}}</span>
 			  			<span class="link" (click)="addEspectacle(Row)">(+ espectacle)</span>
 			  			<span class="link" (click)="genDoc(Row.Fields.ctc_idContracte.Val)">(+ genera doc)</span>
 			  		</td>
-			  		<td>
+
+			  		<td>			  		
 			  			<div *ngFor="let CE of Contractes.getContractesEspectaclesFromContracteControl( Row.Fields.ctc_idContracte.Val )">
+ 
 			  				<span class="linkhand" (click)="editEspectacle(CE)">
-				  				{{Contractes.getEspectacleById( CE.Fields.cte_idespectacle.Val).Fields.ep_Nom.Val}} _
-				  				{{Contractes.getCompanyiaById( Contractes.getEspectacleById( CE.Fields.cte_idespectacle.Val).Fields.ep_idCompanyia.Val ).Fields.c_Nom.Val }} _
-				  				{{Contractes.getEspaiById(CE.Fields.cte_idEspai.Val).Fields.es_Nom.Val }}
+				  				{{Contractes.getNomEspectacle( CE.Fields.cte_idEspectacle.Val )}} _
+				  				{{Contractes.getNomCompanyiaFromEspectacleId(  CE.Fields.cte_idEspectacle.Val ) }} _				  				
+				  				{{Contractes.getNomEspai( CE.Fields.cte_idEspai.Val ) }}
 				  			</span> 			  				
+ 
 			  				<div 
 			  					*ngFor="let CF of Contractes.getContractesFuncionsFromContractesEspectacles( CE.Fields.cte_idContracteEspectacle.Val)"
 			  					class="linkhand" (click)="editFuncio(CF)"
 			  				>
-			  					{{CF.Fields.ctf_Data}} _ {{CF.Fields.ctf_Hora_inici}} 
-			  								  					
-			  					<br />
-			  				</div>			  							  				
+			  					{{CF.Fields.ctf_Data}} _ {{CF.Fields.ctf_Hora_inici}} 			  								  					
+			  					<br />	
+			  				</div>
+			  						  						  							  				
 			  				<span class="link" (click)="addFuncio(Row, CE)">(+ funció)</span>
 			  				<span class="link" (click)="genDocCompanyia(CE.Fields.cte_idContracteEspectacle.Val, Row.Fields.ctc_idContracte.Val )">(+ genera ruta)</span>
+
 			  			</div>
+			  		 
+			  			
 			  		</td>
+
 			  	</tr>
+
 			  </table>
 		
 			</mat-card-content>

@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 export class GlobalVarsService {
 
   public static API_ENDPOINT = 'http://localhost:8285';
-  // public static API_ENDPOINT = 'php/';
+  // public static API_ENDPOINT = 'php';
 
 
   Permisos: PermisosObject = new PermisosObject();

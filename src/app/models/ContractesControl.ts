@@ -2,7 +2,7 @@ import { NumberType, TextType, DateType, BooleanType, FieldConfig, TableRow, Tab
 
 export class ContracteControlFields {
   ctc_idContracte = new NumberType(new FieldConfig('ctc_idContracte', 'Id contracte', 'Input', false, 1 ) );
-  ctc_idprojecte = new NumberType(new FieldConfig('ctc_idprojecte', 'Id projecte', 'Input', false, 1 ) );
+  ctc_idProjecte = new NumberType(new FieldConfig('ctc_idProjecte', 'Id projecte', 'Input', false, 1 ) );
   ctc_idEntitat = new NumberType(new FieldConfig('ctc_idEntitat', 'Id entitat', 'Input', false, 1 ) );
   ctc_EntregatFullRuta = new BooleanType(new FieldConfig('ctc_EntregatFullRuta', 'Entregat Full Ruta?', 'Select', true, 3 ) );
   ctc_EntregatContracte = new BooleanType(new FieldConfig('ctc_EntregatContracte', 'Entregat contracte?', 'Select', true, 3 ) );
@@ -16,7 +16,7 @@ export class ContracteControlRow extends TableRow<ContracteControlFields> {
   getNew($id: number, idProjecte: number, idEntitat: number) {
     this.tmp_action = 'A';
     this.Fields.ctc_idContracte.Val = $id;
-    this.Fields.ctc_idprojecte.Val = idProjecte;
+    this.Fields.ctc_idProjecte.Val = idProjecte;
     this.Fields.ctc_idEntitat.Val = idEntitat;
   }
 }
