@@ -11,6 +11,7 @@ import { EspaiRow } from '../../models/Espais';
 import { Component, OnInit, ViewChild, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
+import { MatHorizontalStepper } from '@angular/material';
 
 @Component({
   selector: 'app-contractes-main',
@@ -25,11 +26,11 @@ export class ContractesMainComponent implements OnInit {
   ContracteFuncio = new ContracteFuncioRow();
   CompanyiesEspectacles = new CompanyiaEspectaclePreuOneObject();
   EntitatsEspais = new EntitatEspaiOneObject();
-  SeleccionoEspectacleDisabled = true;
-  SeleccionoEspaiDisabled = true;
-  TabIndex = 0;
+  FentUnContracte = false;
   idProjecte = 0;
   whenReload = 0;
+
+  @ViewChild('stepper') Stepper: MatHorizontalStepper;
 
   constructor(private db: DbObject, private _dialog: MatDialog) { }
 
@@ -38,19 +39,19 @@ export class ContractesMainComponent implements OnInit {
   /* Inicio el tràmit d'un nou contracte */
   nouContracte(idProjecte: number) {
     this.idProjecte = idProjecte;
-    this.TabIndex = 1;
+    this.FentUnContracte = true;
     this.ContracteControl.tmp_action = 'A';
   }
 
   /* He escollit espectacle i salto a pestanya entitat - espai */
   EsculloCompanyiaEspectacle($CE: CompanyiaEspectaclePreuOneObject) {
     this.CompanyiesEspectacles = $CE;
-    this.TabIndex = 2;
+    this.Stepper.selectedIndex = 1;
+
   }
 
   /* Des d'un contracte existent, escullo un nou espectacle */
   nouEspectacle(CC: ContracteControlRow) {
-    this.TabIndex = 1;
     this.ContracteControl = CC;
   }
 
@@ -77,7 +78,7 @@ export class ContractesMainComponent implements OnInit {
         });
 
     let dialogRef = this._dialog.open(FormEditComponent, { width: '800px', data: [this.ContracteFuncio, 'contractesfuncions'] }).afterClosed()
-      .subscribe( (R: ContracteFuncioRow) => { this.TabIndex = 0; this.whenReload += 1; });
+      .subscribe( (R: ContracteFuncioRow) => { this.FentUnContracte = false; this.whenReload += 1; });
 
   }
 
@@ -128,7 +129,7 @@ export class ContractesMainComponent implements OnInit {
           let T = new ToBDDObject();
           T.addRowUpdate(this.ContracteControl.toBDD('contractescontrol'));
           this.db.doSave(T).subscribe(
-            Y => {              
+            Y => {
               this.ContracteControl.tmp_action = 'U';
               this.doSaveContracteEspectacle();
             },

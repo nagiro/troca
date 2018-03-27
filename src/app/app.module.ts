@@ -17,7 +17,7 @@ import { DbObject } from './models/DbObject.object';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { MatPaginatorModule, MatDialogModule } from '@angular/material';
+import { MatPaginatorModule, MatDialogModule, MatStepperModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,7 +38,6 @@ const appRoutes: Routes = [
   { path: 'Espais', component: EntitatsEspaisListComponent },
   { path: 'Contractes', component: ContractesMainComponent },
   { path: 'Companyies', component: CompanyiesEspectaclesListComponent },
-  
 ];
 
 
@@ -65,6 +64,7 @@ const appRoutes: Routes = [
     MatTabsModule,
     MatButtonModule,
     HttpClientModule,
+    MatStepperModule,
     BrowserAnimationsModule,
     FormsModule,
     FormHelperModule,
