@@ -27,7 +27,7 @@
 				<mat-form-field>
 			    		<input matInput placeholder="Filter" name="S1" (ngModelChange)="FilterContracteControl($event)" [ngModel] = "ContractesSearch">
 			  	</mat-form-field>
-			  	<a href="/assets/tmp/Contracte.zip" mat-button [disabled]="DocGenNoExist" color="primary">Baixa't document</a>			  	
+			  	<a href="/assets/tmp/Contracte.zip" target="_new" *ngIf="!DocGenNoExist">Baixa't document</a>			  	
 			</mat-card-header>
 			<mat-card-content>			  				
 			  <table class="table">

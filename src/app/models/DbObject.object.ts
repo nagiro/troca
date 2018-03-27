@@ -9,11 +9,12 @@ import { HttpClient } from '@angular/common/http';
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class DbObject {
 
-  private base = GlobalVarsService.API_ENDPOINT;
+  private base = environment.API_ENDPOINT;
 
   // Injectem el httpClient
   constructor(private http: HttpClient, private _n: NotificationService) {}
