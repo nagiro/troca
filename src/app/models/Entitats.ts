@@ -13,7 +13,7 @@ export class EntitatFields {
   e_Telefon = new TextType(new FieldConfig('e_Telefon', 'Tel. Resp.', 'Input', true, 2 ) );
   e_Email = new TextType(new FieldConfig('e_Email', 'Email Resp.', 'Input', true, 5 ) );
   
-  
+  e_DataModificacio = new DateType(new FieldConfig('e_DataModificacio', 'Data mod.', 'Date', false, 3), true );
   
 }
 

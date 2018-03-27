@@ -8,6 +8,7 @@ export class ContacteComercialFields {
   ccco_Resposta = new TextType(new FieldConfig('ccco_Resposta', 'Resposta', 'Input', true, 12 ) );
   ccco_idProjecte = new NumberType(new FieldConfig('ccco_idProjecte', 'Projecte', 'Select', true, 2 ), [] );
   ccco_Tancat = new BooleanType(new FieldConfig('ccco_Tancat', 'Tancat?', 'Select', true, 2 ) );
+  ccco_DataModificacio = new DateType(new FieldConfig('ccco_DataModificacio', 'Data mod.', 'Date', false, 3), true );
 }
 
 

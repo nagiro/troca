@@ -1,6 +1,13 @@
 
 	<mat-form-field style="width:100%">
-		<input matInput [matDatepicker]="picker" placeholder="{{Titol}}" [ngModel]="Dada.Val" (ngModelChange)="update($event)" name="{{Nom}}">
+		<input 
+			matInput 
+			[matDatepicker]="picker" 
+			placeholder="{{Titol}}" 
+			[ngModel]="Dada.Val" 
+			(ngModelChange)="update($event)" name="{{Nom}}"
+			[disabled] ="!Dada.FieldConfig.Visible"
+		>
 		<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 		<mat-datepicker #picker></mat-datepicker>
 		<span *ngIf="isCO" matSuffix><mat-checkbox [ngModel] = "CampsObligats" (ngModelChange)="updateObligat($event)" name="o_Camp1"></mat-checkbox></span>

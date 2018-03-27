@@ -1,4 +1,4 @@
-import { TableRowFieldList, TableRow, ToBDDObject } from '../../helpers/type-helper.object';
+import { TableRowFieldList, TableRow, ToBDDObject, DateType } from '../../helpers/type-helper.object';
 import { DbObject } from '../../models/DbObject.object';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -31,17 +31,18 @@ export class FormEditComponent<T> implements OnInit {
   ngOnInit() {}
 
   doSave(): void {
-    if (this.R.tmp_action === 'A') { this.R.tmp_action = 'A'; }
-    else { this.R.tmp_action = 'U'; }
+    if (this.R.tmp_action === 'A') { this.R.tmp_action = 'A'; } else { this.R.tmp_action = 'U'; }
+    // Actualitzem la data de modificació si existeix
+    let DM = this.E.FieldList.find( X => X.FieldConfig.FieldName.includes('DataModificacio'));
+    if (DM) { DM.Val = new Date(); }
     let BDD = new ToBDDObject();
     BDD.addRowUpdate( this.R.toBDD(this.NomTaula) );
-    this._db.doSave( BDD ).subscribe( X => console.log(X));
+    this._db.doSave( BDD ).subscribe( X => console.log(X) );
     this.dialogRef.close(this.P);
   }
 
   doDelete(): void {
-    if (this.R.tmp_action === 'A') { this.R.tmp_action = '-'; }
-    else { this.R.tmp_action = 'D'; }
+    if (this.R.tmp_action === 'A') { this.R.tmp_action = '-'; } else { this.R.tmp_action = 'D'; }
     let BDD = new ToBDDObject();
     BDD.addRowUpdate( this.R.toBDD(this.NomTaula) );
     this._db.doSave( BDD ).subscribe(X => console.log(X));

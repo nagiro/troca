@@ -8,6 +8,8 @@ export class ContracteControlFields {
   ctc_EntregatContracte = new BooleanType(new FieldConfig('ctc_EntregatContracte', 'Entregat contracte?', 'Select', true, 3 ) );
   ctc_DataContracte = new DateType(new FieldConfig('ctc_DataContracte', 'Data contracte', 'Date', true, 3 ) );
   ctc_Observacions = new TextType(new FieldConfig('ctc_Observacions', 'Observacions', 'Textarea', true, 12 ) );
+  ctc_DataModificacio = new DateType(new FieldConfig('ctc_DataModificacio', 'Data mod.', 'Date', false, 3), true );
+
 }
 
 export class ContracteControlRow extends TableRow<ContracteControlFields> {

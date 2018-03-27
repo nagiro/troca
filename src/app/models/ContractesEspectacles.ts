@@ -12,6 +12,7 @@ export class ContracteEspectacleFields {
   cte_idContracte = new NumberType(new FieldConfig('cte_idContracte', 'Id contracte', 'Input', false, 1 ) );
   cte_idEspectacle = new NumberType(new FieldConfig('cte_idEspectacle', 'Id espectacle', 'Input', false, 1 ) );
   cte_idEspai = new NumberType(new FieldConfig('cte_idEspai', 'Id espai', 'Input', false, 1 ) );
+  cte_DataModificacio = new DateType(new FieldConfig('cte_DataModificacio', 'Data mod.', 'Date', false, 3), true );
 
 }
 

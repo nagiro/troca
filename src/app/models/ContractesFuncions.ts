@@ -12,7 +12,8 @@ export class ContracteFuncioFields {
   ctf_Aparcament = new TextType(new FieldConfig('ctf_Aparcament', 'Aparcament', 'Textarea', true, 6 ) );
   ctf_CarregaDescarrega = new TextType(new FieldConfig('ctf_CarregaDescarrega', 'Carrega/Descarrega', 'Textarea', true, 6 ) );
   ctf_On_Canviarse = new TextType(new FieldConfig('ctf_On_Canviarse', 'On canviar-se', 'Textarea', true, 6 ) );
-  ctf_Acords_tecnics= new TextType(new FieldConfig('ctf_Acords_tecnics', 'Acords tècnics', 'Textarea', true, 12 ) );
+  ctf_Acords_tecnics = new TextType(new FieldConfig('ctf_Acords_tecnics', 'Acords tècnics', 'Textarea', true, 12 ) );
+  ctf_DataModificacio = new DateType(new FieldConfig('ctf_DataModificacio', 'Data mod.', 'Date', false, 3), true );
 }
 
 export class ContracteFuncioRow extends TableRow<ContracteFuncioFields> {

@@ -43,6 +43,8 @@ export class EspectacleFields {
   ep_Requeriments = new TextType(new FieldConfig('ep_Requeriments', 'Requeriments', 'Textarea', true, 12 ));
 
   ep_Descripcio = new TextType(new FieldConfig('ep_Descripcio', 'Descripció curta', 'Textarea', true, 12 ));
+  
+  ep_DataModificacio = new DateType(new FieldConfig('ep_DataModificacio', 'Data mod.', 'Date', false, 3), true );
 
 }
 

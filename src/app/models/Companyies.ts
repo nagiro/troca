@@ -1,4 +1,4 @@
-import { TableRow, NumberType, TextType, TableModelListData, TableRowList, TableSearchList, FieldConfig } from '../helpers/type-helper.object';
+import { DateType, TableRow, NumberType, TextType, TableModelListData, TableRowList, TableSearchList, FieldConfig } from '../helpers/type-helper.object';
 
 export class CompanyiaFields {
     c_idCompanyia = new NumberType( new FieldConfig('c_idCompanyia', 'Id', 'Input', false, 1 ) );
@@ -13,6 +13,8 @@ export class CompanyiaFields {
     c_Responsable2 = new TextType( new FieldConfig('c_Responsable2', 'Nom tècnic', 'Input', true, 4 ) );
     c_Telefon2 = new TextType( new FieldConfig('c_Telèfon2', 'Telèfon tècnic', 'Input', true, 4 ));
     c_Email2 = new TextType( new FieldConfig('c_Email2', 'Email tècnic', 'Input', true, 4 ));
+  
+    c_DataModificacio = new DateType(new FieldConfig('c_DataModificacio', 'Data mod.', 'Date', false, 3), true );
 
 }
 

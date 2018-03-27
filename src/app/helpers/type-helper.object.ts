@@ -49,8 +49,7 @@ export class DateType implements DatabaseType<Date> {
 
   constructor( $FieldConfig?: FieldConfig, $default = true) {
     if ($default) { this.Val = new Date(); }
-    if ($FieldConfig) { this.FieldConfig = $FieldConfig; }
-    else { this.FieldConfig.FieldType = 'Date'; }
+    if ($FieldConfig) { this.FieldConfig = $FieldConfig; } else { this.FieldConfig.FieldType = 'Date'; }
   }
 
   toBDD() { return (this.Val) ? this.Val.getFullYear() + '-' + ( Number(this.Val.getMonth()) + 1 ) + '-' + this.Val.getDate() : null; }
@@ -68,8 +67,7 @@ export class HoraType implements DatabaseType<string> {
 
   constructor($FieldConfig?: FieldConfig, $default = true) {
     if ($default) { this.Val = '00:00'; }
-    if ($FieldConfig) { this.FieldConfig = $FieldConfig; }
-    else { this.FieldConfig.FieldType = 'Input'; }
+    if ($FieldConfig) { this.FieldConfig = $FieldConfig; } else { this.FieldConfig.FieldType = 'Input'; }
   }
 
   toBDD() { return (this.Val) ? this.Val : null; }

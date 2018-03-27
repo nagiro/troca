@@ -6,6 +6,7 @@ export class PreuFields {
   p_PreuSC = new NumberType( new FieldConfig('p_PreuSC', 'Sense Comis.', 'Input', true, 3 ) );
   p_PreuAC = new NumberType( new FieldConfig('c_idCompanyia', 'Amb Comis.', 'Input', true, 3 ) );
   p_Text = new TextType( new FieldConfig('p_Text', 'Text', 'Input', true, 3 ) );
+  p_DataModificacio = new DateType(new FieldConfig('p_DataModificacio', 'Data mod.', 'Date', false, 3), true );
 }
 
 export class PreuRow extends TableRow<PreuFields> {

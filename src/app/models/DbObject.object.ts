@@ -55,28 +55,28 @@ export class DbObject {
 /*
  *
  *
-DROP VIEW CompanyiesEspectaclesPreus;
-CREATE VIEW CompanyiesEspectaclesPreus as
-  Select * FROM Companyies c
-  LEFT JOIN Espectacles e ON (c.c_idCompanyia = e.ep_idCompanyia)
-  LEFT JOIN Preus p ON (p.p_idEspectacle = e.ep_idEspectacle);
+DROP VIEW companyiesespectaclespreus;
+CREATE VIEW companyiesespectaclespreus as
+  Select * FROM companyies c
+  LEFT JOIN espectacles e ON (c.c_idCompanyia = e.ep_idCompanyia)
+  LEFT JOIN preus p ON (p.p_idEspectacle = e.ep_idEspectacle);
 
-DROP VIEW Contractes;
-CREATE VIEW Contractes as
-    SELECT * FROM Projectes PR
-    INNER JOIN ContractesControl CC ON (CC.ctc_idProjecte = PR.pr_idProjecte)
-        LEFT JOIN ContracteEspectacles CE ON (CC.ctc_idContracte = CE.cte_idContracte)
-        LEFT JOIN ContractesFuncions CF ON (CE.cte_idContracteEspectacle = CF.ctf_idContracteEspectacle)
-        LEFT JOIN Espais E ON (E.es_idEspai = CE.cte_idEspai)
-        LEFT JOIN Espectacles ES ON (ES.ep_idEspectacle = CE.cte_idespectacle)
-        LEFT JOIN Preus P ON (P.p_idEspectacle = ES.ep_idEspectacle)
-        LEFT JOIN Entitats EN ON (CC.ctc_idEntitat = EN.e_idAjuntament)
-        LEFT JOIN Companyies C ON (C.c_idCompanyia = ES.ep_idCompanyia);
+DROP VIEW contractes;
+CREATE VIEW contractes as
+    SELECT * FROM projectes PR
+    INNER JOIN contractescontrol CC ON (CC.ctc_idProjecte = PR.pr_idProjecte)
+        LEFT JOIN contracteespectacles CE ON (CC.ctc_idContracte = CE.cte_idContracte)
+        LEFT JOIN contractesfuncions CF ON (CE.cte_idContracteEspectacle = CF.ctf_idContracteEspectacle)
+        LEFT JOIN espais E ON (E.es_idEspai = CE.cte_idEspai)
+        LEFT JOIN espectacles ES ON (ES.ep_idEspectacle = CE.cte_idespectacle)
+        LEFT JOIN preus P ON (P.p_idEspectacle = ES.ep_idEspectacle)
+        LEFT JOIN entitats EN ON (CC.ctc_idEntitat = EN.e_idAjuntament)
+        LEFT JOIN companyies C ON (C.c_idCompanyia = ES.ep_idCompanyia);
 
 
-DROP VIEW EntitatsEspais;
-CREATE VIEW EntitatsEspais as
-    SELECT * FROM Entitats E
-        LEFT JOIN Espais ES ON (ES.es_idAjuntament = E.e_idAjuntament);
+DROP VIEW entitatsespais;
+CREATE VIEW entitatsespais as
+    SELECT * FROM entitats E
+        LEFT JOIN espais ES ON (ES.es_idAjuntament = E.e_idAjuntament);
  * /
  */
