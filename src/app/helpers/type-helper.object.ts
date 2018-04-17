@@ -126,7 +126,7 @@ export class TextTypeMultiple implements DatabaseType<string[]> {
 
   toBDD() { return this.Val.join('#'); }
   fromBDD(v: string) { if (v && v !== null) { this.Val = v.split('#'); } }
-  toString() { return this.Val.join('#'); }
+  toString() { return this.Val.join(', '); }
 
 }
 
@@ -377,7 +377,7 @@ export class TableRow<T> {
     return Row;
   }
 
-  fromOtherTable( TR: TableRow<T> ) {    
+  fromOtherTable( TR: TableRow<T> ) {
     Object.keys(this.Fields).forEach(X => this.Fields[X] = TR.Fields[X]);
   }
 
@@ -405,7 +405,7 @@ export class TableRow<T> {
 
   toTableRowFieldList() {
     let R = new TableRowFieldList();
-    Object.keys(this.Fields).forEach(X => { R.FieldList.push( this.Fields[X] ); });    
+    Object.keys(this.Fields).forEach(X => { R.FieldList.push( this.Fields[X] ); });
     return R;
   }
 
@@ -437,15 +437,15 @@ export class TableRowList<T1 extends TableRow<T2>, T2> {
 
   addModel(DadesTaula: T1) { this.RowList.push( DadesTaula ); }
   addModelNoRepeat(DadesTaula: T1, $Camp) {
-    if (this.RowList.findIndex( X => X.Fields[$Camp].Val === DadesTaula.Fields[$Camp].Val) < 0 ) { this.addModel(DadesTaula); }
+    if (this.RowList.findIndex( X => Number(X.Fields[$Camp].Val) === Number(DadesTaula.Fields[$Camp].Val)) < 0 ) { this.addModel(DadesTaula); }
    }
 
   getById($Camp: string, $Valor: any): TableRow<T2> {
-    return this.RowList.find( X => X.Fields[$Camp].Val === $Valor);
+    return this.RowList.find( X => Number(X.Fields[$Camp].Val) === Number($Valor));
   }
 
   getByFk($Camp: string, $Valor: any): TableRow<T2>[] {
-    return this.RowList.filter( X => X.Fields[$Camp].Val === $Valor);
+    return this.RowList.filter( X => Number(X.Fields[$Camp].Val) === Number($Valor));
   }
 
   update(DadesTaula: T1, IndexExisteix: number) {

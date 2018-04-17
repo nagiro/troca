@@ -3,21 +3,21 @@
 	<div class="row">
 		<mat-card class="col-2">
 			<mat-card-header>
-				<mat-card-title> Projectes <span class="link" (click)="editProjecte(null)">+ projecte</span> </mat-card-title>				
+				<mat-card-title> Projectes <span class="link" (click)="editProjecte(null)">+ projecte</span> </mat-card-title>
 			</mat-card-header>
-			<mat-card-content>		
-			  <table class="table">		  	 		  	
+			<mat-card-content>
+			  <table class="table">
 			  	<tr *ngFor="let Row of Projectes.Rows"
 			  	>
 			  		<td>
 			  			<div class="linkhand" (click) = "editProjecte(Row)">
-			  				<span>{{Row.Fields.pr_nom}}</span>				  		
+			  				<span>{{Row.Fields.pr_nom}}</span>
 				  		</div>
 				  		<span class="link" (click)="newContracte(Row.Fields.pr_idProjecte.Val)">+ contracte</span>
-			  		</td>		  					  		
+			  		</td>
 			  	</tr>
 			  </table>
-						  
+
 			</mat-card-content>
 		</mat-card>
 
@@ -27,57 +27,57 @@
 				<mat-form-field>
 			    		<input matInput placeholder="Filter" name="S1" (ngModelChange)="FilterContracteControl($event)" [ngModel] = "ContractesSearch">
 			  	</mat-form-field>
-			  	<a href="/assets/tmp/Contracte.zip" target="_new" *ngIf="!DocGenNoExist">Baixa't document</a>			  	
+			  	<a href="/assets/tmp/Contracte.zip" target="_new" *ngIf="!DocGenNoExist">Baixa't document</a>
 			</mat-card-header>
-			<mat-card-content>			  				
+			<mat-card-content>
 			  <table class="table">
 			  	<tr>
 			  		<th>ID</th>
 			  		<th>Control</th>
 			  		<th>Espectacle + Funcions</th>
 			  	</tr>
-			  
+
 			  	<tr *ngFor="let Row of Contractes.ContractesControl.RowList">
 					<td><span>{{Row.Fields.ctc_idContracte.Val}}</span></td>
  			  		<td>
-			  			<span (click)="editControl(Row)" class="linkhand" >{{Contractes.getEntitatById( Row.Fields.ctc_idEntitat.Val ).Fields.e_Nom.Val}}</span>
+			  			<span (click)="editControl(Row)" class="linkhand" >{{Contractes.getNomEntitat( Row.Fields.ctc_idEntitat.Val )}}</span>
 			  			<span class="link" (click)="addEspectacle(Row)">(+ espectacle)</span>
 			  			<span class="link" (click)="genDoc(Row.Fields.ctc_idContracte.Val)">(+ genera doc)</span>
 			  		</td>
 
-			  		<td>			  		
+			  		<td>
 			  			<div *ngFor="let CE of Contractes.getContractesEspectaclesFromContracteControl( Row.Fields.ctc_idContracte.Val )">
- 
+
 			  				<span class="linkhand" (click)="editEspectacle(CE)">
 				  				{{Contractes.getNomEspectacle( CE.Fields.cte_idEspectacle.Val )}} _
-				  				{{Contractes.getNomCompanyiaFromEspectacleId(  CE.Fields.cte_idEspectacle.Val ) }} _				  				
+				  				{{Contractes.getNomCompanyiaFromEspectacleId(  CE.Fields.cte_idEspectacle.Val ) }} _
 				  				{{Contractes.getNomEspai( CE.Fields.cte_idEspai.Val ) }}
-				  			</span> 			  				
- 
-			  				<div 
+				  			</span>
+
+			  				<div
 			  					*ngFor="let CF of Contractes.getContractesFuncionsFromContractesEspectacles( CE.Fields.cte_idContracteEspectacle.Val)"
 			  					class="linkhand" (click)="editFuncio(CF)"
 			  				>
-			  					{{CF.Fields.ctf_Data}} _ {{CF.Fields.ctf_Hora_inici}} 			  								  					
-			  					<br />	
+			  					{{CF.Fields.ctf_Data}} _ {{CF.Fields.ctf_Hora_inici}}
+			  					<br />
 			  				</div>
-			  						  						  							  				
+
 			  				<span class="link" (click)="addFuncio(Row, CE)">(+ funció)</span>
 			  				<span class="link" (click)="genDocCompanyia(CE.Fields.cte_idContracteEspectacle.Val, Row.Fields.ctc_idContracte.Val )">(+ genera ruta)</span>
 
 			  			</div>
-			  		 
-			  			
+
+
 			  		</td>
 
 			  	</tr>
 
 			  </table>
-		
+
 			</mat-card-content>
 		</mat-card>
 
-	
+
 	</div>
-	
+
 </form>

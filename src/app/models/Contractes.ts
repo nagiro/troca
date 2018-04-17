@@ -73,11 +73,16 @@ export class ContractesObject {
 
   }
 
-  getEntitatById(id: number) { return this.Entitats.getById('e_idAjuntament', id); }
-  getProjecteById(id: number) { return this.Projectes.getById('pr_idProjecte', id); }
-  getEspaiById(id: number) { return this.Espais.getById('es_idEspai', id); }
-  getEspectacleById(id: number) { return this.Espectacles.getById('ep_idEspectacle', id); }
-  getCompanyiaById(id: number) { return this.Companyies.getById('c_idCompanyia', id); }
+  getNomEntitat(idE: number) {
+    let A = this.getEntitatById(idE);
+    if (A) { return A.Fields.e_Nom.toString(); } else { return 'N/D'; }
+  }
+
+  getEntitatById(id: number) { return this.Entitats.getById('e_idAjuntament', +id); }
+  getProjecteById(id: number) { return this.Projectes.getById('pr_idProjecte', +id); }
+  getEspaiById(id: number) { return this.Espais.getById('es_idEspai', +id); }
+  getEspectacleById(id: number) { return this.Espectacles.getById('ep_idEspectacle', +id); }
+  getCompanyiaById(id: number) { return this.Companyies.getById('c_idCompanyia', +id); }
   getContractesEspectaclesFromContracteControl(idCC: number): ContracteEspectacleRow[] { return this.ContractesEspectacles.getByFk('cte_idContracte', idCC);  }
   getContractesFuncionsFromContractesEspectacles(idCE: number): ContracteFuncioRow[] { return this.ContractesFuncions.getByFk('ctf_idContracteEspectacle', idCE); }
 
